@@ -1,25 +1,67 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import { StreamChat } from 'stream-chat';
+import { Chat, Channel, ChannelHeader, ChannelList, LoadingIndicator, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import 'stream-chat-react/dist/css/index.css';
+
+const apiKey = 'ndxtdn49zt79';
+
+const elijah = {
+  id: 'elijah',
+  name: 'elijah',
+  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZWxpamFoIn0.c7ZoswnoqcHFdgSfdFBYrbQ4D-h67oU6qCZxjstslsI'
 }
+
+const greisz = {
+  id: 'greisz',
+  name: 'greisz',
+  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZ3JlaXN6In0.5k8eDoBxX48kk-bShbroxGo6nG7zjOWNNScTVYVOyB0'
+}
+
+const user = greisz;
+
+const filters = { type: 'messaging', members: { $in: [user.id] } };
+const sort = { last_message_at: -1 };
+
+const App = () => {
+  const [chatClient, setChatClient] = useState(null);
+
+  useEffect(() => {
+    const initChat = async () => {
+      const client = StreamChat.getInstance(apiKey);
+
+      await client.connectUser(
+        {
+          id: user.id,
+          name: user.name,
+          image: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png',
+        },
+        user.token,
+      );
+
+      setChatClient(client);
+    };
+
+    initChat();
+  }, []);
+
+  if (!chatClient) {
+    return <LoadingIndicator />;
+  }
+
+  return (
+    <Chat client={chatClient} theme='messaging light'>
+      <ChannelList filters={filters} sort={sort} />
+      <Channel>
+        <Window>
+          <ChannelHeader />
+          <MessageList />
+          <MessageInput />
+        </Window>
+        <Thread />
+      </Channel>
+    </Chat>
+  );
+};
 
 export default App;
