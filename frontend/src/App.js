@@ -1,24 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { StreamChat } from 'stream-chat';
 import { Chat, Channel, ChannelHeader, ChannelList, LoadingIndicator, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
-
 import 'stream-chat-react/dist/css/index.css';
+import clientConfig from './clientConfig.json'
+const apiKey = clientConfig.streamKey;
 
-const apiKey = 'ndxtdn49zt79';
-
-const elijah = {
-  id: 'elijah',
-  name: 'elijah',
-  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZWxpamFoIn0.c7ZoswnoqcHFdgSfdFBYrbQ4D-h67oU6qCZxjstslsI'
-}
-
-const greisz = {
-  id: 'greisz',
-  name: 'greisz',
-  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZ3JlaXN6In0.5k8eDoBxX48kk-bShbroxGo6nG7zjOWNNScTVYVOyB0'
-}
-
-const user = greisz;
+const user = {
+  id: clientConfig.userID,
+  name: clientConfig.userName,
+  token: clientConfig.userToken
+};
 
 const filters = { type: 'messaging', members: { $in: [user.id] } };
 const sort = { last_message_at: -1 };
