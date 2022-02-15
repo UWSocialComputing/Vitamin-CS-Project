@@ -3,6 +3,7 @@ import { StreamChat } from 'stream-chat';
 import { Chat, Channel, ChannelHeader, ChannelList, LoadingIndicator, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
 import 'stream-chat-react/dist/css/index.css';
 import clientConfig from './clientConfig.json'
+import { PartyHeader } from './components/PartyHeader/PartyHeader';
 const apiKey = clientConfig.streamKey;
 
 const user = {
@@ -45,7 +46,8 @@ const App = () => {
       <ChannelList filters={filters} sort={sort} />
       <Channel>
         <Window>
-          <ChannelHeader />
+          {/* <ChannelHeader /> */}
+          <PartyHeader />
           <MessageList />
           <MessageInput />
         </Window>
