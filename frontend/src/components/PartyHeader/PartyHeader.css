@@ -1,0 +1,121 @@
+.party-header__container {
+  position: relative;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background: #ffffff;
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
+  border-top-right-radius: 16px;
+  z-index: 1;
+}
+
+.party-header__channel-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.party-header__channel-wrapper svg {
+  cursor: pointer;
+}
+
+.party-header__name {
+  font-family: Helvetica Neue, sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  color: #2c2c30;
+  margin-right: 8px;
+}
+
+.party-header__name-wrapper {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  width: 98%;
+}
+
+.party-header__name-multi {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+}
+
+.party-header__name-multi:nth-child(3) {
+  margin-right: 0px;
+}
+
+.party-header__name-wrapper .str-chat__avatar {
+  margin-right: 8px;
+}
+
+.party-header__name.user {
+  font-weight: 900;
+  font-size: 24px;
+  margin: 0px;
+}
+
+.party-header__members {
+  font-size: 16px;
+  margin: 0px;
+}
+
+.party-header__right {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  right: 0;
+  padding: 0 20px;
+  background: #ff5d5d;
+}
+
+.party-header__right-pin-wrapper {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.party-header__right svg {
+  margin-left: 16px;
+  margin-right: 4px;
+}
+
+.party-header__right-text {
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 14px;
+  color: #858688;
+}
+
+.party-header__title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.party-header__details {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  margin-left: 40px;
+}
+
+.party-header__regular {
+  font-size: 16px;
+  margin: 0px;
+}
+
+.party-header__bold {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0px;
+}
+
+.party-header__button {
+  border-radius: 100px;
+  margin: 0px 40px;
+}
+
+.party-header__grow {
+  flex-grow: 1;
+}
