@@ -46,7 +46,6 @@ const App = () => {
       <ChannelList filters={filters} sort={sort} />
       <Channel>
         <Window>
-          {/* <ChannelHeader /> */}
           <PartyHeader />
           <MessageList />
           <MessageInput />

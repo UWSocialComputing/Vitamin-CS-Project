@@ -6,14 +6,15 @@ import {
   useChatContext,
 } from 'stream-chat-react';
 
-import './PartyHeader.css';
+import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-// import { ChannelInfo, PinIcon } from '../../assets';
+import './PartyHeader.css';
 
 export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
   const { client } = useChatContext();
   const { closeThread } = useChannelActionContext();
-  const { channel, watcher_count } = useChannelStateContext();
+  const { channel } = useChannelStateContext();
 
   const teamHeader = `# ${channel.data.name || channel.data.id || 'random'}`;
 
@@ -26,8 +27,23 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
     if (!members.length) {
       return (
         <div className='party-header__name-wrapper'>
-          <Avatar image={null} size={32} />
-          <p className='party-header__name user'>Johnny Blaze</p>
+          <Avatar image={null} size={50} />
+          <div className='party-header__title'>
+            <p className='party-header__name user'>[Vitamin CS]</p>
+            <p className='party-header__members'>[Elijah, Logan, Shaurya, Will]</p>
+          </div>
+          <div className='party-header__grow' />
+          {/* <div className='party-header__spacer' /> */}
+          <div className='party-header__details'>
+            <p className='party-header__regular'> Up Next:</p>
+            <p className='party-header__bold'>[Episode 1 by 1/21]</p>
+          </div>
+          {/* <div className='party-header__spacer' /> */}
+          <div className='party-header__details'>
+            <p className='party-header__regular'>Currently Watching:</p>
+            <p className='party-header__bold'>[Orange is the New Black]</p>
+          </div>
+          <Button variant="danger" className='party-header__button'>Invite Friends</Button>
         </div>
       );
     }
@@ -52,12 +68,6 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
     );
   };
 
-  const getWatcherText = (watchers) => {
-    if (!watchers) return 'No users online';
-    if (watchers === 1) return '1 user online';
-    return `${watchers} users online`;
-  };
-
   return (
     <div className='party-header__container'>
       {channel.type === 'messaging' ? (
@@ -66,21 +76,16 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
         <div className='party-header__channel-wrapper'>
           <p className='party-header__name'>{teamHeader}</p>
           <span style={{ display: 'flex' }} onClick={() => setIsEditing(true)}>
-            {/* <ChannelInfo /> */}
           </span>
         </div>
       )}
       <div className='party-header__right'>
-        <p className='party-header__right-text'>{getWatcherText(watcher_count)}</p>
         <div
           className='party-header__right-pin-wrapper'
           onClick={(e) => {
             closeThread(e);
-            setPinsOpen((prevState) => !prevState);
           }}
         >
-          {/* <PinIcon /> */}
-          <p className='party-header__right-text'>Pins</p>
         </div>
       </div>
     </div>

@@ -1,11 +1,11 @@
 .party-header__container {
   position: relative;
-  height: 62px;
+  height: 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  background: #ff5d5d;
+  background: #ffffff;
   box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
   border-top-right-radius: 16px;
   z-index: 1;
@@ -33,6 +33,7 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
+  width: 98%;
 }
 
 .party-header__name-multi {
@@ -50,8 +51,14 @@
 }
 
 .party-header__name.user {
-  font-weight: 500;
-  font-size: 14px;
+  font-weight: 900;
+  font-size: 24px;
+  margin: 0px;
+}
+
+.party-header__members {
+  font-size: 16px;
+  margin: 0px;
 }
 
 .party-header__right {
@@ -78,4 +85,37 @@
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
   color: #858688;
+}
+
+.party-header__title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.party-header__details {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  margin-left: 40px;
+}
+
+.party-header__regular {
+  font-size: 16px;
+  margin: 0px;
+}
+
+.party-header__bold {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0px;
+}
+
+.party-header__button {
+  border-radius: 100px;
+  margin: 0px 40px;
+}
+
+.party-header__grow {
+  flex-grow: 1;
 }
