@@ -30,15 +30,12 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
           <Avatar image={null} size={50} />
           <div className='party-header__title'>
             <p className='party-header__name user'>[Vitamin CS]</p>
-            <p className='party-header__members'>[Elijah, Logan, Shaurya, Will]</p>
           </div>
           <div className='party-header__grow' />
-          {/* <div className='party-header__spacer' /> */}
           <div className='party-header__details'>
             <p className='party-header__regular'> Up Next:</p>
             <p className='party-header__bold'>[Episode 1 by 1/21]</p>
           </div>
-          {/* <div className='party-header__spacer' /> */}
           <div className='party-header__details'>
             <p className='party-header__regular'>Currently Watching:</p>
             <p className='party-header__bold'>[Orange is the New Black]</p>
