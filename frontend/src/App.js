@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { StreamChat } from 'stream-chat';
-import { Chat, Channel, ChannelHeader, ChannelList, LoadingIndicator, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
+import { Chat, Channel, ChannelHeader, ChannelList, LoadingIndicator, MessageInput, MessageList, Thread, Window, showMessageActionsBox } from 'stream-chat-react';
 import 'stream-chat-react/dist/css/index.css';
 import clientConfig from './clientConfig.json'
 import { PartyHeader } from './components/PartyHeader/PartyHeader';
+import { NavBar } from './components/NavBar/NavBar';
 const apiKey = clientConfig.streamKey;
 
 const user = {
@@ -43,6 +44,7 @@ const App = () => {
 
   return (
     <Chat client={chatClient} theme='messaging light'>
+      <NavBar/>
       <ChannelList filters={filters} sort={sort} />
       <Channel>
         <Window>
