@@ -14,6 +14,6 @@ exports.login = (req, res) => {
         res.send("missing information--need username and password");
     } else {
         // add processing, respond with token?
-        res.send("successful login");
+        res.send("successful login with username: " + username + " and password: " + password);
     }
 }
