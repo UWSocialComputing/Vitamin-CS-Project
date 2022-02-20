@@ -61,11 +61,6 @@
   border-radius: 10px;
 }
 
-.party-header__name.user:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-}
-
 .party-header__members {
   font-family: 'Outfit', sans-serif;
   font-size: 16px;
@@ -114,6 +109,9 @@
 }
 
 .party-header__details {
+  background-color: #ffffff;
+  border: none;
+  color: black;
   font-family: 'Outfit', sans-serif;
   display: flex;
   flex-direction: column;
@@ -122,6 +120,16 @@
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.party-header__details:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: black;
+}
+
+.party-header__details:focus {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: black;
 }
 
 .party-header__regular {

@@ -21,6 +21,10 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
   const handleClose = () => setShow('none');
   const handleShow = (type) => setShow(type);
 
+  const [nameInput, setNameInput] = useState("Group Name");
+  const [scheduleInput, setScheduleInput] = useState("Ep1 by Wednesday");
+  const [watchInput, setWatchInput] = useState("Sqiud Game");
+
   const teamHeader = `# ${channel.data.name || channel.data.id || 'random'}`;
 
   const getMessagingHeader = () => {
@@ -34,60 +38,66 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
         <div className='party-header__name-wrapper'>
           <Avatar image={null} size={50} />
           <Button onClick={() => handleShow('title')} className='party-header__title'>
-            <p className='party-header__name user'>[Vitamin CS]</p>
+            <p className='party-header__name user'>{nameInput}</p>
           </Button>
           <div className='party-header__grow' />
           <Button onClick={() => handleShow('up next')} className='party-header__details'>
             <p className='party-header__regular'> Up Next:</p>
-            <p className='party-header__bold'>[Episode 1 by 1/21]</p>
+            <p className='party-header__bold'>{scheduleInput}</p>
           </Button>
           <Button onClick={() => handleShow('currently watching')} className='party-header__details'>
             <p className='party-header__regular'>Currently Watching:</p>
-            <p className='party-header__bold'>[Orange is the New Black]</p>
+            <p className='party-header__bold'>{watchInput}</p>
           </Button>
           <Button variant="danger" className='party-header__button'>Invite Friends</Button>
 
-          <Modal show={show == 'title'} onHide={handleClose}>
+          <Modal show={show === 'title'} onHide={handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>Chat Title</Modal.Title>
+              <Modal.Title>Edit Group Name</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+            <Modal.Body>
+              <input type='text' value={nameInput} onChange={(e) => setNameInput(e.target.value)} />
+            </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
-                Close
+                Cancel
               </Button>
-              <Button variant="primary" onClick={handleClose}>
-                Save Changes
+              <Button variant="danger" onClick={handleClose}>
+                Save
               </Button>
             </Modal.Footer>
           </Modal>
 
-          <Modal show={show == 'up next'} onHide={handleClose}>
+          <Modal show={show === 'up next'} onHide={handleClose}>
             <Modal.Header closeButton>
               <Modal.Title>Up Next</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+            <Modal.Body>
+              <input type='text' value={scheduleInput} onChange={(e) => setScheduleInput(e.target.value)} />
+            </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
-                Close
+                Cancel
               </Button>
-              <Button variant="primary" onClick={handleClose}>
-                Save Changes
+              <Button variant="danger" onClick={handleClose}>
+                Save
               </Button>
             </Modal.Footer>
           </Modal>
 
-          <Modal show={show == 'currently watching'} onHide={handleClose}>
+          <Modal show={show === 'currently watching'} onHide={handleClose}>
             <Modal.Header closeButton>
               <Modal.Title>Currently Watching</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+            <Modal.Body>
+              <input type='text' value={watchInput} onChange={(e) => setWatchInput(e.target.value)} />
+            </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
-                Close
+                Cancel
               </Button>
-              <Button variant="primary" onClick={handleClose}>
-                Save Changes
+              <Button variant="danger" onClick={handleClose}>
+                Save
               </Button>
             </Modal.Footer>
           </Modal>

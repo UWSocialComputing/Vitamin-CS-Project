@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StreamChat } from 'stream-chat';
-import { Chat, Channel, ChannelHeader, ChannelList, LoadingIndicator, MessageInput, MessageList, Thread, Window, showMessageActionsBox } from 'stream-chat-react';
+import { Chat, Channel, ChannelList, LoadingIndicator, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
 import 'stream-chat-react/dist/css/index.css';
 import clientConfig from './clientConfig.json'
 import { PartyHeader } from './components/PartyHeader/PartyHeader';
