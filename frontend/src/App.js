@@ -5,6 +5,8 @@ import 'stream-chat-react/dist/css/index.css';
 import clientConfig from './clientConfig.json'
 import { PartyHeader } from './components/PartyHeader/PartyHeader';
 import { NavBar } from './components/NavBar/NavBar';
+import { CustomChannelList } from './components/CustomChannelList/CustomChannelList';
+import { channelReducer } from 'stream-chat-react/dist/components/Channel/channelState';
 const apiKey = clientConfig.streamKey;
 
 const user = {
@@ -13,7 +15,7 @@ const user = {
   token: clientConfig.userToken
 };
 
-const filters = { type: 'messaging', members: { $in: [user.id] } };
+const filters = { members: { $in: [user.id] } };
 const sort = { last_message_at: -1 };
 
 const App = () => {
@@ -33,6 +35,28 @@ const App = () => {
       );
 
       setChatClient(client);
+
+      // Add channel
+      // const channel = client.channel('team', 'test2', {
+      //   name: 'test2',
+      //   channel_detail: { watching: 'Squidward Game', nextUp: 'Ep 10 by Thursday'}
+      // });
+
+      // await channel.watch();
+
+      // await channel.addMembers(['elijah']);
+
+      // Query channels
+      // const channels = await client.queryChannels(filters, sort, {
+      //     watch: true, // this is the default
+      // });
+
+      // channels.map((channel) => {
+      //         console.log(channel.data.name, channel.cid)
+      //     })
+
+      //     await channels[1].updatePartial({ set:{ name: 'test2' }});
+      //     console.log('hi');
     };
 
     initChat();
