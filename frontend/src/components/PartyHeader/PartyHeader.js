@@ -9,7 +9,7 @@ import {
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
-
+import DatePicker from 'react-date-picker';
 import './PartyHeader.css';
 
 export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
@@ -22,7 +22,8 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
   const handleShow = (type) => setShow(type);
 
   const [nameInput, setNameInput] = useState("Group Name");
-  const [scheduleInput, setScheduleInput] = useState("Ep1 by Wednesday");
+  const [nextEpisode, setNextEpisode] = useState("Ep1");
+  const [nextDate, setNextDate] = useState(new Date());
   const [watchInput, setWatchInput] = useState("Sqiud Game");
 
   const teamHeader = `# ${channel.data.name || channel.data.id || 'random'}`;
@@ -31,7 +32,7 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
     const members = Object.values(channel.state.members).filter(
       ({ user }) => user.id !== client.userID,
     );
-
+    
     return (
       <div className='party-header__name-wrapper'>
         <Avatar image={null} size={50} />
@@ -41,7 +42,7 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
         <div className='party-header__grow' />
         <Button onClick={() => handleShow('up next')} className='party-header__details'>
           <p className='party-header__regular'> Up Next:</p>
-          <p className='party-header__bold'>{scheduleInput}</p>
+          <p className='party-header__bold'>{nextEpisode} by {nextDate.getMonth() + 1}/{nextDate.getDate()}</p>
         </Button>
         <Button onClick={() => handleShow('currently watching')} className='party-header__details'>
           <p className='party-header__regular'>Currently Watching:</p>
@@ -71,7 +72,12 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
             <Modal.Title>Up Next</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <input type='text' value={scheduleInput} onChange={(e) => setScheduleInput(e.target.value)} />
+            <div>
+              <label>Next Episode: </label><input type='text' value={nextEpisode} onChange={(e) => setNextEpisode(e.target.value)} />
+            </div>
+            <div>
+              <label>Due By: </label><DatePicker onChange={e => setNextDate(e)} value={nextDate}/>
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
@@ -105,7 +111,7 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
 
   return (
     <div className='party-header__container'>
-      {channel.type === 'messaging' ? (
+      {channel.type === 'team' ? (
         getMessagingHeader()
       ) : (
         <div className='party-header__channel-wrapper'>
