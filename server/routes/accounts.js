@@ -1,3 +1,5 @@
+const dbo = require("../db/conn");
+
 exports.createAccount = (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
