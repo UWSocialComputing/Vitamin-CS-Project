@@ -24,7 +24,7 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
   const [nameInput, setNameInput] = useState("Group Name");
   const [nextEpisode, setNextEpisode] = useState("Ep1");
   const [nextDate, setNextDate] = useState(new Date());
-  const [watchInput, setWatchInput] = useState("Sqiud Game");
+  const [watchInput, setWatchInput] = useState("Squid Game");
 
   const teamHeader = `# ${channel.data.name || channel.data.id || 'random'}`;
 
@@ -32,7 +32,7 @@ export const PartyHeader = ({ setIsEditing, setPinsOpen }) => {
     const members = Object.values(channel.state.members).filter(
       ({ user }) => user.id !== client.userID,
     );
-    
+
     return (
       <div className='party-header__name-wrapper'>
         <Avatar image={null} size={50} />

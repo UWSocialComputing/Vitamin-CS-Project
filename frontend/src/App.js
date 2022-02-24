@@ -6,7 +6,9 @@ import clientConfig from './clientConfig.json'
 import { PartyHeader } from './components/PartyHeader/PartyHeader';
 import { NavBar } from './components/NavBar/NavBar';
 import { CustomChannelList } from './components/CustomChannelList/CustomChannelList';
+import { CustomChannelPreview } from './components/CustomChannelPreview/CustomChannelPreview';
 import { channelReducer } from 'stream-chat-react/dist/components/Channel/channelState';
+
 const apiKey = clientConfig.streamKey;
 
 const user = {
@@ -17,9 +19,11 @@ const user = {
 
 const filters = { members: { $in: [user.id] } };
 const sort = { last_message_at: -1 };
+const options = { state: true, watch: true, presence: true };
 
 const App = () => {
   const [chatClient, setChatClient] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
     const initChat = async () => {
@@ -69,7 +73,15 @@ const App = () => {
   return (
     <Chat client={chatClient} theme='messaging light'>
       <NavBar/>
-      <ChannelList filters={filters} sort={sort} />
+      <ChannelList
+          filters={filters}
+          sort={sort}
+          options={options}
+          List={(props) => (
+            <CustomChannelList {...props} onCreateChannel={() => setIsCreating(!isCreating)} />
+          )}
+          Preview={(props) => <CustomChannelPreview {...props} {...{ setIsCreating }} />}
+        />
       <Channel>
         <Window>
           <PartyHeader />
