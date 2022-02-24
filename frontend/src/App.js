@@ -102,6 +102,7 @@ const App = () => {
       <NavBar />
       <Routes>
         <Route path='/login' element={<SignIn />} />
+        <Route path='/createAccount' element={<CreateAccount />} />
         <Route path='/' element={<ChatScreen />} />
       </Routes>
     </Router>

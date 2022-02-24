@@ -1,8 +1,9 @@
-import React from 'react';
+import { useState, React } from 'react';
 import './CreateAccount.css';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
+import { Link } from 'react-router-dom';
 
 export const CreateAccount = () => {
   return (
@@ -26,7 +27,9 @@ export const CreateAccount = () => {
     <div className='signin-switch'>
       <h3>Already Have An Account?</h3>
       <div className="signin-text"><h6>Log into your account and start talking everything TV!</h6></div>
-      <Button variant="default" className='signin-button'>Sign In</Button>
+      <Link to="/login">
+        <Button variant="default" className='signin-button'>Sign In</Button>
+      </Link>
     </div>
   </div>
   );

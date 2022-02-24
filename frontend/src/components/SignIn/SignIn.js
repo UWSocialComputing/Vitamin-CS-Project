@@ -3,6 +3,7 @@ import './SignIn.css';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
+import { Link } from 'react-router-dom';
 
 export const SignIn = () => {
   return (
@@ -26,7 +27,9 @@ export const SignIn = () => {
       <div className='create-switch'>
         <h3>New To Look Club?</h3>
         <div className="create-text"><h6>Sign up and start watching shows with friends today</h6></div>
-        <Button variant="default" className='create-button-one'>Create Account</Button>
+        <Link to="/createAccount">
+          <Button variant="default" className='create-button-one'>Create Account</Button>
+        </Link>
       </div>
     </div>
   );
