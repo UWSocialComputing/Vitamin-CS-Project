@@ -9,6 +9,7 @@ import { CustomChannelList } from './components/CustomChannelList/CustomChannelL
 import { CustomChannelPreview } from './components/CustomChannelPreview/CustomChannelPreview';
 import { SignIn } from './components/SignIn/SignIn';
 import { CreateAccount } from './components/SignIn/CreateAccount'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const apiKey = clientConfig.streamKey;
 
@@ -71,27 +72,38 @@ const App = () => {
     return <LoadingIndicator />;
   }
 
+  const ChatScreen = () => {
+    return (
+      <Chat client={chatClient} theme='messaging light'>
+        <ChannelList
+            filters={filters}
+            sort={sort}
+            options={options}
+            List={(props) => (
+              <CustomChannelList {...props} onCreateChannel={() => setIsCreating(!isCreating)} />
+            )}
+            Preview={(props) => <CustomChannelPreview {...props} {...{ setIsCreating }} />}
+          />
+        <Channel>
+          <Window>
+            <PartyHeader />
+            <MessageList />
+            <MessageInput />
+          </Window>
+          <Thread />
+        </Channel>
+      </Chat>
+    );
+  };
+
   return (
-    <Chat client={chatClient} theme='messaging light'>
-      <NavBar/>
-      <ChannelList
-          filters={filters}
-          sort={sort}
-          options={options}
-          List={(props) => (
-            <CustomChannelList {...props} onCreateChannel={() => setIsCreating(!isCreating)} />
-          )}
-          Preview={(props) => <CustomChannelPreview {...props} {...{ setIsCreating }} />}
-        />
-      <Channel>
-        <Window>
-          <PartyHeader />
-          <MessageList />
-          <MessageInput />
-        </Window>
-        <Thread />
-      </Channel>
-    </Chat>
+    <Router>
+      <NavBar />
+      <Routes>
+        <Route path='/login' element={<SignIn />} />
+        <Route path='/' element={<ChatScreen />} />
+      </Routes>
+    </Router>
   );
 };
 
