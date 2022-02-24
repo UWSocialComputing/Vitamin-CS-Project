@@ -24,6 +24,7 @@ export const CustomChannelList = ({ children, error = false, loading, onCreateCh
     return (
       <div className='messaging__channel-list'>
         {children}
+        <div className='messaging__channel-list__gap' />
         <div className='messaging__channel-list__header'>
           <button className='messaging__channel-list__header__button' onClick={onCreateChannel}>
             + New Watch Party
