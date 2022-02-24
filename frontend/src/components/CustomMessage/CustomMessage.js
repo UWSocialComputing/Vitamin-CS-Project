@@ -13,7 +13,7 @@ import {
   useMessageContext,
 } from 'stream-chat-react';
 
-import './CustomMessage.scss';
+import './CustomMessage.css';
 
 export const CustomMessage = () => {
   const {

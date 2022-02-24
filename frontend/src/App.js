@@ -10,6 +10,7 @@ import { CustomChannelList } from './components/CustomChannelList/CustomChannelL
 import { CustomChannelPreview } from './components/CustomChannelPreview/CustomChannelPreview';
 import { SignIn } from './components/SignIn/SignIn';
 import { CreateAccount } from './components/SignIn/CreateAccount';
+import { CustomMessage } from './components/CustomMessage/CustomMessage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const apiKey = clientConfig.streamKey;
@@ -88,7 +89,7 @@ const App = () => {
         <Channel>
           <Window>
             <PartyHeader />
-            <MessageList />
+            <MessageList messages={CustomMessage}/>
             <MessageInput />
           </Window>
           <Thread />
