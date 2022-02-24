@@ -91,8 +91,19 @@ form {
   background-color: white;
 }
 
+.signin-switch a {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.create-switch a:visited {
+  text-decoration: none;
+}
+
 .signin-switch h6 {
-  padding-bottom: 360px;
+  padding-bottom: 340px;
   padding-left: 0px;
   padding-right: 0px;
   width: 70%;

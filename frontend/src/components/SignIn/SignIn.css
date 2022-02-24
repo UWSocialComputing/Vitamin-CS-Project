@@ -18,6 +18,17 @@ form,
   align-items: center;
 }
 
+.create-switch a {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.create-switch a:visited {
+  text-decoration: none;
+}
+
 .username,
 .password {
   width: 50%;
@@ -35,6 +46,7 @@ form,
   width: 20%;
   background-color: #890101;
 }
+
 
 .create-button-one {
   width: 40%;
