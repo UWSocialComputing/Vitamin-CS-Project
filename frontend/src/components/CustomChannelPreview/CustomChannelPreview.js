@@ -31,7 +31,7 @@ export const CustomChannelPreview = (props) => {
       <Avatar
             image={shiba}
             name={'shiba!'}
-            size={18}
+            size={60}
           />
       <div className='channel-preview__content-wrapper'>
         <div className='channel-preview__content-top'>
@@ -39,7 +39,10 @@ export const CustomChannelPreview = (props) => {
             {channel.data.name}
           </p>
         </div>
-        <p className='channel-preview__content-message'>{latestMessage.props.source || 'Send a message'}</p>
+        {/* <p className='channel-preview__content-message'>{latestMessage.props.source || 'Send a message'}</p> */}
+        <p className='channel-preview__content-message'>{channel.data.show}</p>
+        <p className='channel-preview__content-message'>{channel.data.episode} by {channel.data.date}</p>
+
       </div>
     </div>
   );
