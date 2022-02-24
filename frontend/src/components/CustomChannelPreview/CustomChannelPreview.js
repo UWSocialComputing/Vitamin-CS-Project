@@ -36,7 +36,7 @@ export const CustomChannelPreview = (props) => {
       <div className='channel-preview__content-wrapper'>
         <div className='channel-preview__content-top'>
           <p className='channel-preview__content-name'>
-            {channel.id}
+            {channel.data.name}
           </p>
         </div>
         <p className='channel-preview__content-message'>{latestMessage.props.source || 'Send a message'}</p>
