@@ -31,12 +31,12 @@ form,
   padding-bottom: 200px;
 }
 
-.signin-button {
+.signin-button-one {
   width: 20%;
   background-color: #890101;
 }
 
-.create-button {
+.create-button-one {
   width: 40%;
 }
 
@@ -52,8 +52,8 @@ form,
 
 .username-input,
 .password-input,
-.signin-button,
-.create-button {
+.signin-button-one,
+.create-button-one {
   border-radius: 100px;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
 }
@@ -85,7 +85,7 @@ form {
   padding-bottom: 80px;
 }
 
-.create-button {
+.create-button-one {
   background-color: white;
 }
 
@@ -112,7 +112,7 @@ form {
   text-align: center;
 }
 
-.create-button,
-.signin-button {
+.create-button-one,
+.signin-button-one {
   height: 50px;
 }

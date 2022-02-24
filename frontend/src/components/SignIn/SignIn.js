@@ -19,14 +19,14 @@ export const SignIn = () => {
               <Form.Label className="password-label">Password</Form.Label>
               <Form.Control className="password-input" type="text" placeholder="Enter Password" />
             </Form.Group>
-            <Button variant="danger" className='signin-button'>Sign In</Button>
+            <Button variant="danger" className='signin-button-one'>Sign In</Button>
           </Form>
         </div>
       </div>
       <div className='create-switch'>
         <h3>New To Look Club?</h3>
         <div className="create-text"><h6>Sign up and start watching shows with friends today</h6></div>
-        <Button variant="default" className='create-button'>Create Account</Button>
+        <Button variant="default" className='create-button-one'>Create Account</Button>
       </div>
     </div>
   );

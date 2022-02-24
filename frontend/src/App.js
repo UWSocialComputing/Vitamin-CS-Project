@@ -9,7 +9,7 @@ import { NavBar } from './components/NavBar/NavBar';
 import { CustomChannelList } from './components/CustomChannelList/CustomChannelList';
 import { CustomChannelPreview } from './components/CustomChannelPreview/CustomChannelPreview';
 import { SignIn } from './components/SignIn/SignIn';
-import { CreateAccount } from './components/SignIn/CreateAccount'
+import { CreateAccount } from './components/SignIn/CreateAccount';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const apiKey = clientConfig.streamKey;
