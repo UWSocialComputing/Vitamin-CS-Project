@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.create-container,
+.create-parent,
+.signin-switch,
+.create-form,
+form {
+  display: flex;
+  font-family: 'Outfit', sans-serif;
+}
+
+.create-parent {
+  flex-direction: row;
+}
+form,
+.create-form {
+  width: 100%;
+  align-items: center;
+}
+
+.username,
+.password {
+  width: 50%;
+}
+
+.username {
+  padding-bottom: 70px;
+}
+
+.password {
+  padding-bottom: 200px;
+}
+
+.create-button {
+  width: 20%;
+  background-color: #890101;
+}
+
+.signin-button {
+  width: 40%;
+}
+
+.signin-switch {
+  background-image: linear-gradient(to bottom, #880000 , #EE7A3A);
+  color: white;
+}
+
+.username-label,
+.password-label {
+  font-weight: 600;
+}
+
+.username-input,
+.password-input,
+.signin-button,
+.create-button {
+  border-radius: 100px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+html,
+body,
+#root,
+.create-parent,
+.create-container,
+.signin-switch {
+  height: 100%;
+}
+
+.create-container,
+.signin-switch,
+.create-form,
+form {
+  flex-direction: column;
+}
+
+.create-container,
+.signin-switch {
+  align-items: center;
+}
+
+
+.signin-switch h3 {
+  padding-top: 70px;
+  padding-bottom: 80px;
+  width: 70%;
+  font-weight: 700;
+}
+
+.signin-button {
+  background-color: white;
+}
+
+.signin-switch h6 {
+  padding-bottom: 360px;
+  padding-left: 0px;
+  padding-right: 0px;
+  width: 70%;
+  margin: auto;
+}
+
+.create-container {
+  width: 80%;
+  background-image: url("../../../public/images/BackgroundSignin.jpg");
+}
+
+.create-container h1 {
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+.signin-text h3,
+.signin-text h6 {
+  text-align: center;
+}
+
+.create-button,
+.signin-button {
+  height: 50px;
+}

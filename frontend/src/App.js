@@ -7,7 +7,8 @@ import { PartyHeader } from './components/PartyHeader/PartyHeader';
 import { NavBar } from './components/NavBar/NavBar';
 import { CustomChannelList } from './components/CustomChannelList/CustomChannelList';
 import { CustomChannelPreview } from './components/CustomChannelPreview/CustomChannelPreview';
-import { channelReducer } from 'stream-chat-react/dist/components/Channel/channelState';
+import { SignIn } from './components/SignIn/SignIn';
+import { CreateAccount } from './components/SignIn/CreateAccount'
 
 const apiKey = clientConfig.streamKey;
 
