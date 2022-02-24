@@ -1,5 +1,5 @@
 const express = require("express")
-const Post = require("../mongooserver/models/Post") // new
+const Credential = require("../mongooserver/models/Credential") // new
 const router = express.Router()
 
 // Get all logins
@@ -10,7 +10,7 @@ router.get("/logins", async (req, res) => {
 
 // register a user
 router.post("/register", async (req, res) => {
-    const credential = new Post({
+    const credential = new Credential({
         username: req.body.username,
         password: req.body.password,
     })
