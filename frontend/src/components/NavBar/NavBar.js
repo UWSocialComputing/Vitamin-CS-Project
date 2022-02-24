@@ -13,7 +13,9 @@ export const NavBar = () => {
     <div className='nav-bar'>
       <div className='nav-logo'><h1>Look Club</h1></div>
       <div className="nav-options">
-        <Button variant="default" className='nav-clubs'>My Clubs</Button>
+        <Link to="/">
+          <Button variant="default" className='nav-clubs'>My Clubs</Button>
+        </Link>
         <Link to="/login">
           <Button variant="danger" className='nav-login'>Sign In</Button>
         </Link>
