@@ -25,6 +25,8 @@ exports.createGroup = async (req, res) => {
 
     await channel.watch();
 
+    await channel.addMembers([users[0].id]);
+
     res.status(200).json({ status: 100});
 } catch (error) {
     console.log(error);

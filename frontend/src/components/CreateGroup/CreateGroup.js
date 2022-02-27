@@ -27,8 +27,6 @@ export const CreateGroup = () => {
     const { data: { status} } = await axios.post(`${URL}`,
       { id, frequency }
     );
-
-    console.log(status);
   }
 
   return (
