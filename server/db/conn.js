@@ -1,6 +1,8 @@
 const { MongoClient } = require("mongodb");
+require('dotenv').config();
 
 const Db = process.env.ATLAS_URI;
+console.log(Db);
 
 const client = new MongoClient(Db, {
     useNewUrlParser: true,

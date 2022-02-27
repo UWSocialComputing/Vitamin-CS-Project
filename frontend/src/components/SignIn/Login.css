@@ -1,21 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-.create-container,
-.create-parent,
-.signin-switch,
-.create-form,
+.login-container,
+.login-parent,
+.create-switch,
+.login-form,
 form {
   display: flex;
   font-family: 'Outfit', sans-serif;
 }
 
-.create-parent {
+.login-parent {
   flex-direction: row;
 }
 form,
-.create-form {
+.login-form {
   width: 100%;
   align-items: center;
+}
+
+.create-switch a {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.create-switch a:visited {
+  text-decoration: none;
 }
 
 .username,
@@ -31,16 +42,17 @@ form,
   padding-bottom: 200px;
 }
 
-.create-button {
+.login-button-one {
   width: 20%;
   background-color: #890101;
 }
 
-.signin-button {
+
+.create-button-one {
   width: 40%;
 }
 
-.signin-switch {
+.create-switch {
   background-image: linear-gradient(to bottom, #880000 , #EE7A3A);
   color: white;
 }
@@ -52,8 +64,8 @@ form,
 
 .username-input,
 .password-input,
-.signin-button,
-.create-button {
+.login-button-one,
+.create-button-one {
   border-radius: 100px;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
 }
@@ -61,71 +73,58 @@ form,
 html,
 body,
 #root,
-.create-parent,
-.create-container,
-.signin-switch {
+.login-parent,
+.login-container,
+.create-switch {
   height: 100%;
 }
 
-.create-container,
-.signin-switch,
-.create-form,
+.login-container,
+.create-switch,
+.login-form,
 form {
   flex-direction: column;
 }
 
-.create-container,
-.signin-switch {
+.login-container,
+.create-switch {
   align-items: center;
 }
 
 
-.signin-switch h3 {
+.create-switch h3 {
   padding-top: 70px;
   padding-bottom: 80px;
-  width: 70%;
-  font-weight: 700;
 }
 
-.signin-button {
+.create-button-one {
   background-color: white;
 }
 
-.signin-switch a {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  text-decoration: none;
-}
-
-.create-switch a:visited {
-  text-decoration: none;
-}
-
-.signin-switch h6 {
-  padding-bottom: 340px;
+.create-switch h6 {
+  padding-bottom: 360px;
   padding-left: 0px;
   padding-right: 0px;
   width: 70%;
   margin: auto;
 }
 
-.create-container {
+.login-container {
   width: 80%;
   background-image: url("../../../public/images/BackgroundSignin.jpg");
 }
 
-.create-container h1 {
+.login-container h1 {
   padding-top: 70px;
   padding-bottom: 70px;
 }
 
-.signin-text h3,
-.signin-text h6 {
+.create-text h3,
+.create-text h6 {
   text-align: center;
 }
 
-.create-button,
-.signin-button {
+.create-button-one,
+.login-button-one {
   height: 50px;
 }

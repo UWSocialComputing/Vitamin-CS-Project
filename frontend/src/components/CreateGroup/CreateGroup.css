@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+.creategroup-container {
+  width: 70%;
+  height: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+* {
+  font-family: 'Outfit', sans-serif;
+}
+
+.creategroup-title {
+  padding-top: 100px;
+  padding-bottom: 60px;
+  font-weight: 600;
+}
+
+.create-text-wrapper,
+.create-tv-wrapper {
+  display:flex;
+  flex-direction: row;
+}
+
+.create-tv-wrapper {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.time-image {
+  background-image: url('../../../public/images/Time.jpg');
+  background-size: 20px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.tv-image {
+  background-image: url('../../../public/images/TVlogo.jpg');
+  background-size: 20px;
+  width: 20px;
+  height: 25px;
+  margin-right: 10px;
+}
+
+.find-group-button {
+  background-color: black;
+  color: white;
+  border-radius: 100px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.find-link-wrapper {
+  width: 100%;
+  height: 100%;
+}
+

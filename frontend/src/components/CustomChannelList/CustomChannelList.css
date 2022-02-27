@@ -16,6 +16,12 @@
   }
 }
 
+.messaging__channel-list__messsage_empty {
+  font-family: 'Outfit', sans-serif;
+  color: white;
+  text-align: left;
+}
+
 .messaging__channel-list__header {
   display: flex;
   flex-direction: column;
@@ -46,6 +52,10 @@
 
 .str-chat.dark .messaging__channel-list__header__name {
   color: rgb(56, 56, 56);
+}
+
+a {
+  text-decoration: none;
 }
 
 .messaging__channel-list__header__button {

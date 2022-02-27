@@ -8,19 +8,28 @@ import { PartyHeader } from './components/PartyHeader/PartyHeader';
 import { NavBar } from './components/NavBar/NavBar';
 import { CustomChannelList } from './components/CustomChannelList/CustomChannelList';
 import { CustomChannelPreview } from './components/CustomChannelPreview/CustomChannelPreview';
-import { SignIn } from './components/SignIn/SignIn';
-import { CreateAccount } from './components/SignIn/CreateAccount';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Login } from './components/SignIn/Login';
+import { Signup } from './components/SignIn/Signup';
+import { CreateGroup } from './components/CreateGroup/CreateGroup';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 
 const apiKey = clientConfig.streamKey;
 
-const user = {
-  id: clientConfig.userID,
-  name: clientConfig.userName,
-  token: clientConfig.userToken
-};
+const cookies = new Cookies();
+const authToken = cookies.get("token");
+const client = StreamChat.getInstance(apiKey);
 
-const filters = { members: { $in: [user.id] } };
+if(authToken) {
+  client.connectUser({
+      id: cookies.get('userId'),
+      name: cookies.get('username'),
+      token: cookies.get('token'),
+      hashedPassword: cookies.get('hashedPassword')
+  }, authToken)
+}
+
+const filters = { members: { $in: [cookies.get('userId')] } };
 const sort = { last_message_at: -1 };
 const options = { state: true, watch: true, presence: true };
 
@@ -30,16 +39,6 @@ const App = () => {
 
   useEffect(() => {
     const initChat = async () => {
-      const client = StreamChat.getInstance(apiKey);
-
-      await client.connectUser(
-        {
-          id: user.id,
-          name: user.name,
-          image: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png',
-        },
-        user.token,
-      );
 
       setChatClient(client);
 
@@ -74,6 +73,10 @@ const App = () => {
   }
 
   const ChatScreen = () => {
+
+
+    if (!authToken) return <Navigate to="/login"/>;
+
     return (
       <Chat client={chatClient} theme='messaging light'>
         <ChannelList
@@ -101,9 +104,10 @@ const App = () => {
     <Router>
       <NavBar />
       <Routes>
-        <Route path='/login' element={<SignIn />} />
-        <Route path='/createAccount' element={<CreateAccount />} />
-        <Route path='/' element={<ChatScreen />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route path='/createGroup' element={<CreateGroup />} />
+        <Route path='/' element={<ChatScreen />} exact/>
       </Routes>
     </Router>
   );

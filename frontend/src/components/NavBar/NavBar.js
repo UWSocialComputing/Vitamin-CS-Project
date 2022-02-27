@@ -2,12 +2,22 @@ import { React, useState } from 'react';
 import './NavBar.css';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { LoginPopup } from '../LoginPopup/loginPopup';
 import { Link } from 'react-router-dom';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 export const NavBar = () => {
 
-  const [loginOpen, setLoginOpen] = useState(false);
+  const logout = () => {
+    cookies.remove("token");
+    cookies.remove('userId');
+    cookies.remove('username');
+    cookies.remove('hashedPassword');
+    window.location.reload();
+  }
+
+
 
   return (
     <div className='nav-bar'>
@@ -16,11 +26,12 @@ export const NavBar = () => {
         <Link to="/">
           <Button variant="default" className='nav-clubs'>My Clubs</Button>
         </Link>
-        <Link to="/login">
-          <Button variant="danger" className='nav-login'>Sign In</Button>
-        </Link>
+        {!cookies.get('token') && <Link to="/login">
+          <Button variant="danger" className='nav-login'>Log In</Button>
+        </Link>}
+        {cookies.get('token') &&
+          <Button variant="danger" className='nav-login' onClick={logout}>Log Out</Button>}
       </div>
-      {loginOpen && <LoginPopup close={() => setLoginOpen(false)}/>}
     </div>
   );
 };
