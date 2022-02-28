@@ -55,6 +55,7 @@ form,
 .create-switch {
   background-image: linear-gradient(to bottom, #880000 , #EE7A3A);
   color: white;
+  width: 20%
 }
 
 .username-label,
@@ -112,6 +113,7 @@ form {
 .login-container {
   width: 80%;
   background-image: url("../../../public/images/BackgroundSignin.jpg");
+  background-size: cover;
 }
 
 .login-container h1 {
