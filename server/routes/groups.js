@@ -23,9 +23,11 @@ exports.createGroup = async (req, res) => {
 
     const groupId = newGroup._id.toString();
 
-    const channel = client.channel('team', groupId, { created_by_id: users[0].id }, {
-      name: users[0].name,
-      channel_detail: { name: "Give me a name!", watching: 'Demon Slayer', frequency: frequency }
+    const channel = client.channel('team', groupId, {
+      created_by_id: userId,
+      name: "Give me a name!",
+      show: 'Demon Slayer',
+      frequency: frequency 
     });
 
     await channel.watch();
