@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const { signup, login } = require('./routes/authenticate.js')
-const { createGroup, joinGroup } = require('./routes/groups')
+const { createGroup, joinGroup, requestGroup } = require('./routes/groups.js')
 
 const authRoutes = require('./routes/authenticate.js');
 
