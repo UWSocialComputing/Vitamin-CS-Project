@@ -98,7 +98,9 @@ exports.requestGroup = async (req, res) => {
           // add user to group members array
           newGroup.members.push(req.userId);
           // add user to stream channel
-          await channel.addMembers([req.userId]);
+          const { users } = await client.queryUsers({ id: req.userId });
+          if (!users.length) return res.status(400).json({ message: 'User not found' });
+          await channel.addMembers([users[0].id]);
         } catch (error) {
           return res.status(500).json({ message: "error creating group: " + error });
         }
@@ -135,7 +137,9 @@ exports.requestGroup = async (req, res) => {
             // add user to group members array
             newGroup.members.push(req.userId);
             // add user to stream channel
-            await channel.addMembers([req.userId]);
+            const { users } = await client.queryUsers({ id: req.userId });
+            if (!users.length) return res.status(400).json({ message: 'User not found' });
+            await channel.addMembers([users[0].id]);
           } catch (error) {
             return res.status(500).json({ message: "error creating group: " + error });
           }
@@ -146,7 +150,9 @@ exports.requestGroup = async (req, res) => {
             // add user to group members array
             newGroup.members.push(req.userId);
             // add user to stream channel
-            await channel.addMembers([req.userId]);
+            const { users } = await client.queryUsers({ id: req.userId });
+            if (!users.length) return res.status(400).json({ message: 'User not found' });
+            await channel.addMembers([users[0].id]);
           } catch (error) {
             return res.status(500).json({ message: "error creating group: " + error });
           }
@@ -157,7 +163,9 @@ exports.requestGroup = async (req, res) => {
             // add user to group members array
             newGroup.members.push(req.userId);
             // add user to stream channel
-            await channel.addMembers([req.userId]);
+            const { users } = await client.queryUsers({ id: req.userId });
+            if (!users.length) return res.status(400).json({ message: 'User not found' });
+            await channel.addMembers([users[0].id]);
           } catch (error) {
             return res.status(500).json({ message: "error creating group: " + error });
           }
