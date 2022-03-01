@@ -69,12 +69,12 @@ exports.requestGroup = async (req, res) => {
     const pendingRequests = dbo.getDb().collection("PendingRequests");
 
     const result = await pendingRequests.findOne({ userId: userId, frequency: frequency, tvShow: tvShow }, {});
-    if (!result) return res.status(400).json({ message: "Duplicate request!" });
+    if (result) return res.status(400).json({ message: "Duplicate request!" });
 
     const newRequest = { userId: userId, frequency: frequency, tvShow: tvShow }
 
     const exactFreqRequests = pendingRequests.find({ frequency: frequency, tvShow: tvShow });
-    const count = exactFreqRequests.count();
+    var count = exactFreqRequests.count();
     if (count >= 2) { // minimum group size of 3
       // make a group - exactFreqRequests
       const client = new StreamChat(api_key, api_secret);
