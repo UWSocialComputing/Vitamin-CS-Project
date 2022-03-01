@@ -50,7 +50,6 @@ export const PartyHeader = ( {setIsEditing} ) => {
     const members = Object.values(channel.state.members).filter(
       ({ user }) => user.id !== client.userID,
     );
-
     return (
       <div className='party-header__name-wrapper'>
         <Avatar image={null} size={50} />
@@ -66,7 +65,22 @@ export const PartyHeader = ( {setIsEditing} ) => {
           <p className='party-header__regular'>Currently Watching:</p>
           <p className='party-header__bold'>{watchInput}</p>
         </Button>
-        <Button variant="danger" className='party-header__button'>Invite Friends</Button>
+        <Button onClick={() => handleShow('invite')}variant="danger" className='party-header__button'>Invite Friends</Button>
+
+        <Modal show={show === 'invite'} onHide={handleCancel}>
+          <Modal.Header closeButton>
+            <Modal.Title>Invite Your Friends!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p className='party-header__regular'>Send your friends this link:</p> 
+            <p className='party-header__bold'>{`localhost:3000/invite/${channel.id}`}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={() => {handleSave('name')}}>
+              Ok
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
         <Modal show={show === 'title'} onHide={handleCancel}>
           <Modal.Header closeButton>

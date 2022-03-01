@@ -11,8 +11,9 @@ import { CustomChannelPreview } from './components/CustomChannelPreview/CustomCh
 import { Login } from './components/SignIn/Login';
 import { Signup } from './components/SignIn/Signup';
 import { CreateGroup } from './components/CreateGroup/CreateGroup';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie';
+import axios from 'axios';
 
 const apiKey = clientConfig.streamKey;
 
@@ -76,7 +77,7 @@ const App = () => {
 
 
     if (!authToken) return <Navigate to="/login"/>;
-
+    
     return (
       <Chat client={chatClient} theme='messaging light'>
         <ChannelList
@@ -100,12 +101,28 @@ const App = () => {
     );
   };
 
+  const InviteWrapper = () => { 
+    const { id } = useParams();
+    useEffect(() => {
+      const addToGroup = async () => {
+        await axios.post(`http://localhost:8000/joinGroup`,{ userId: cookies.get('userId'), channelId: id});
+      }
+      if (authToken) {
+        addToGroup();
+      }
+    }, [id])
+
+    if (!authToken) return <Navigate to="/login"/>;
+    return <Navigate to="/"/>
+  }
+
   return (
     <Router>
       <NavBar />
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
+        <Route path={'/invite/:id'} exact element={<InviteWrapper />} />
         <Route path='/createGroup' element={<CreateGroup />} />
         <Route path='/' element={<ChatScreen />} exact/>
       </Routes>
