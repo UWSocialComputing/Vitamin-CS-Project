@@ -62,126 +62,55 @@ exports.joinGroup = async (req, res) => {
 exports.requestGroup = async (req, res) => {
   try {
     const { userId, frequency, tvShow } = req.body;
-
+    const intFreq = parseInt(frequency);
     const pendingRequests = dbo.getDb().collection("PendingRequests");
+    const newRequest = { userId: userId, frequency: intFreq, tvShow: tvShow }
 
-    const result = await pendingRequests.findOne({ userId: userId, frequency: frequency, tvShow: tvShow }, {});
+    // check if it's a duplicate request
+    const result = await pendingRequests.findOne(newRequest);
     if (result) return res.status(400).json({ message: "Duplicate request!" });
 
-    const newRequest = { userId: userId, frequency: frequency, tvShow: tvShow }
+    const count = await pendingRequests.countDocuments({ frequency: intFreq, tvShow: tvShow });
+    console.log('count: ' + count);
 
-    const exactFreqRequests = pendingRequests.find({ frequency: frequency, tvShow: tvShow });
-    var count = exactFreqRequests.count();
-    if (count >= 2) { // minimum group size of 3
-      // make a group - exactFreqRequests
-      const client = new StreamChat(api_key, api_secret);
-      const { users } = await client.queryUsers({ id: userId });
-      if (!users.length) return res.status(400).json({ message: 'User not found' });
+    if (count >= 2) { // minimum group size of 3 from the same frequency
+      console.log('making a group');
+
+      const newGroup = { members: [userId] }
+
+      const matchedRequests = pendingRequests.find({
+        $and: [{ tvShow: tvShow },
+        { frequency: { $in: [intFreq, intFreq - 1, intFreq + 1] } }]
+      }, { "userId": 1, _id: 0 });
+
+      matchedRequests.forEach(function (request) {
+        newGroup.members.push(request.userId);
+      });
+
+      pendingRequests.deleteMany({
+        $and: [{ tvShow: tvShow }, {
+          frequency:
+            { $in: [intFreq, intFreq - 1, intFreq + 1] }
+        }]
+      });
+
       const groups = dbo.getDb().collection("Groups");
-      const newGroup = { members: [users[0].id] }
       await groups.insertOne(newGroup);
       const groupId = newGroup._id;
 
-      const channel = client.channel('team', groupId.toString(), { created_by_id: users[0].id }, {
+      const client = new StreamChat(api_key, api_secret);
+      const channel = client.channel('team', groupId.toString(), { created_by_id: userId }, {
         name: tvShow + " Club",
-        channel_detail: { name: "Give me a name!", watching: tvShow, frequency: frequency }
+        channel_detail: { name: "Give me a name!", watching: tvShow, frequency: intFreq }
       });
-
+      console.log(newGroup.members);
+      await channel.addMembers(newGroup.members);
       await channel.watch();
-      await channel.addMembers([users[0].id]);
 
-      for await (const req of exactFreqRequests) {
-        try {
-          // add user to group members array
-          newGroup.members.push(req.userId);
-          // add user to stream channel
-          const { users } = await client.queryUsers({ id: req.userId });
-          if (!users.length) return res.status(400).json({ message: 'User not found' });
-          await channel.addMembers([users[0].id]);
-        } catch (error) {
-          return res.status(500).json({ message: "error creating group: " + error });
-        }
-      }
-      // update group in Mongo
-      groups.updateOne({ _id: groupId }, { $set: { members: newGroup } })
-      // delete reuests in Mongo
-      pendingRequests.deleteMany({ frequency: frequency, tvShow: tvShow });
       res.status(200).json({ status: 100, message: "Group generated" });
     } else {
-      const lessFreqRequests = pendingRequests.find({ frequency: frequency - 1, tvShow: tvShow })
-      const moreFreqRequests = pendingRequests.find({ frequency: frequency + 1, tvShow: tvShow })
-      count += lessFreqRequests.count() + moreFreqRequests.count();
-      if (count >= 2) {
-        // make a group - exactFreqRequests + lessFreqRequests + moreFreqRequests
-        const client = new StreamChat(api_key, api_secret);
-        const { users } = await client.queryUsers({ id: userId });
-        if (!users.length) return res.status(400).json({ message: 'User not found' });
-        const groups = dbo.getDb().collection("Groups");
-        const newGroup = { members: [users[0].id] }
-        await groups.insertOne(newGroup);
-        const groupId = newGroup._id;
-
-        const channel = client.channel('team', groupId.toString(), { created_by_id: users[0].id }, {
-          name: tvShow + " Club",
-          channel_detail: { name: "Give me a name!", watching: tvShow, frequency: frequency }
-        });
-
-        await channel.watch();
-        await channel.addMembers([users[0].id]);
-
-        for await (const req of exactFreqRequests) {
-          try {
-            // add user to group members array
-            newGroup.members.push(req.userId);
-            // add user to stream channel
-            const { users } = await client.queryUsers({ id: req.userId });
-            if (!users.length) return res.status(400).json({ message: 'User not found' });
-            await channel.addMembers([users[0].id]);
-          } catch (error) {
-            return res.status(500).json({ message: "error creating group: " + error });
-          }
-        }
-
-        for await (const req of lessFreqRequests) {
-          try {
-            // add user to group members array
-            newGroup.members.push(req.userId);
-            // add user to stream channel
-            const { users } = await client.queryUsers({ id: req.userId });
-            if (!users.length) return res.status(400).json({ message: 'User not found' });
-            await channel.addMembers([users[0].id]);
-          } catch (error) {
-            return res.status(500).json({ message: "error creating group: " + error });
-          }
-        }
-
-        for await (const req of moreFreqRequests) {
-          try {
-            // add user to group members array
-            newGroup.members.push(req.userId);
-            // add user to stream channel
-            const { users } = await client.queryUsers({ id: req.userId });
-            if (!users.length) return res.status(400).json({ message: 'User not found' });
-            await channel.addMembers([users[0].id]);
-          } catch (error) {
-            return res.status(500).json({ message: "error creating group: " + error });
-          }
-        }
-
-        // update group in Mongo
-        groups.updateOne({ _id: groupId }, { $set: { members: newGroup } })
-        // delete requests in Mongo
-        pendingRequests.deleteMany({
-          $and: [{ tvShow: tvShow }, {
-            frequency:
-              { $in: [frequency, frequency - 1, frequency + 1] }
-          }]
-        });
-        res.status(200).json({ message: "Group generated" });
-      } else {
-        pendingRequests.insertOne(newRequest);
-        res.status(200).json({ message: "Pending request! Check back soon" });
-      }
+      pendingRequests.insertOne(newRequest);
+      res.status(200).json({ message: "Pending request! Check back soon" });
     }
   } catch (error) {
     console.log(error);
