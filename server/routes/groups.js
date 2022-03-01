@@ -21,10 +21,7 @@ exports.createGroup = async (req, res) => {
     const newGroup = { members: [users[0].id] }
     await groups.insertOne(newGroup);
 
-    const groupId = newGroup._id.toString()
-    console.log(groupId)
-
-    const token = users[0].token;
+    const groupId = newGroup._id.toString();
 
     const channel = client.channel('team', groupId, { created_by_id: users[0].id }, {
       name: users[0].name,

@@ -23,9 +23,9 @@ export const CreateGroup = () => {
     if (document.querySelector('.range-slider__wrap input') !== null) {
       frequency = document.querySelector('.range-slider__wrap input').value;
     }
-    const id = cookies.get('userId');
+    const userId = cookies.get('userId');
     const { data: { status} } = await axios.post(`${URL}`,
-      { id, frequency }
+      { userId, frequency }
     );
   }
 
