@@ -22,6 +22,7 @@ app.post('/createGroup', createGroup);
 
 app.post('/joinGroup', joinGroup);
 
+app.post('/requestGroup', requestGroup);
 
 app.listen(port, () => {
     // perform a database connection when server starts
