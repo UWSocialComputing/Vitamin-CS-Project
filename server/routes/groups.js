@@ -26,8 +26,8 @@ exports.createGroup = async (req, res) => {
     const channel = client.channel('team', groupId, {
       created_by_id: userId,
       name: "Give me a name!",
-      show: 'Demon Slayer',
-      frequency: frequency 
+      show: 'Choose a show',
+      frequency: frequency
     });
 
     await channel.watch();
@@ -73,10 +73,8 @@ exports.requestGroup = async (req, res) => {
     if (result) return res.status(400).json({ message: "Duplicate request!" });
 
     const count = await pendingRequests.countDocuments({ frequency: intFreq, tvShow: tvShow });
-    console.log('count: ' + count);
 
     if (count >= 2) { // minimum group size of 3 from the same frequency
-      console.log('making a group');
 
       const newGroup = { members: [userId] }
 
@@ -101,9 +99,11 @@ exports.requestGroup = async (req, res) => {
       const groupId = newGroup._id;
 
       const client = new StreamChat(api_key, api_secret);
-      const channel = client.channel('team', groupId.toString(), { created_by_id: userId }, {
-        name: tvShow + " Club",
-        channel_detail: { name: "Give me a name!", watching: tvShow, frequency: intFreq }
+      const channel = client.channel('team', groupId.toString(), { 
+        created_by_id: userId,
+        name: `${tvShow} Club`,
+        show: tvShow,
+        frequency: frequency
       });
       console.log(newGroup.members);
       await channel.watch();
