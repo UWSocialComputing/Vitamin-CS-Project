@@ -106,8 +106,8 @@ exports.requestGroup = async (req, res) => {
         channel_detail: { name: "Give me a name!", watching: tvShow, frequency: intFreq }
       });
       console.log(newGroup.members);
-      await channel.addMembers(newGroup.members);
       await channel.watch();
+      await channel.addMembers(newGroup.members);
 
       res.status(200).json({ status: 100, message: "Group generated" });
     } else {
