@@ -10,7 +10,6 @@ export const CustomChannelPreview = (props) => {
   const { channel, latestMessage, setActiveChannel, setIsCreating } = props;
 
   const { channel: activeChannel, client } = useContext(ChatContext);
-  console.log(channel.id);
 
   const members = Object.values(channel.state.members).filter(
     ({ user }) => user.id !== client.userID,
