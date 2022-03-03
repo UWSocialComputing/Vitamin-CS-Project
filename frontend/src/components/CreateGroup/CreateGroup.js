@@ -32,8 +32,8 @@ export const CreateGroup = () => {
   const handleFindGroup = async (e) => {
     const userId = cookies.get('userId');
     console.log({ userId, frequency, show })
-    await axios.post(`${URL}/pendingRequest`,
-    { userId, frequency, show }
+    await axios.post(`${URL}/requestGroup`,
+    { userId, frequency, tvShow: show }
   );
   }
         
