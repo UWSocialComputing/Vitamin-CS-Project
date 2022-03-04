@@ -74,13 +74,9 @@ const App = () => {
   }
 
   const ChatScreen = () => {
-
-
+    
     if (!authToken) return <Navigate to="/login"/>;
 
-    const handleLeave = () => {
-      await channel.removeMembers(['my_user_id']);
-    }
     
     return (
       <Chat client={chatClient} theme='messaging light'>
@@ -95,7 +91,7 @@ const App = () => {
           />
         <Channel>
           <Window>
-            <PartyHeader handleLeave={handleLeave}/>
+            <PartyHeader />
             <MessageList />
             <MessageInput />
           </Window>

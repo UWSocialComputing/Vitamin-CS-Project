@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Avatar,
   useChannelActionContext,
@@ -11,8 +11,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-date-picker';
 import './PartyHeader.css';
+import Cookies from 'universal-cookie';
 
-export const PartyHeader = ( {setIsEditing, handleLeave} ) => {
+const cookies = new Cookies();
+export const PartyHeader = ( {setIsEditing} ) => {
   // const { channel, setIsEditing } = props;
   const { client } = useChatContext();
   const { closeThread } = useChannelActionContext();
@@ -20,6 +22,13 @@ export const PartyHeader = ( {setIsEditing, handleLeave} ) => {
 
   const [show, setShow] = useState('none');
   const handleCancel = () => setShow('none');
+
+  const userId = cookies.get('userId');
+  const handleLeave = () => {
+    channel.removeMembers([userId]);
+    handleCancel();
+  }
+
   const handleSave = async (field) => {
     setShow('none');
     switch (field) {
