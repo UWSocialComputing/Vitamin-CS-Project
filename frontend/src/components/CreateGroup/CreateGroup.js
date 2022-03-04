@@ -10,6 +10,7 @@ import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 import RangeSlider from 'react-bootstrap-range-slider';
 import Cookies from 'universal-cookie';
 import { DefaultSuggestionListHeader } from 'stream-chat-react';
+import Modal from 'react-bootstrap/Modal';
 
 const cookies = new Cookies();
 
@@ -20,6 +21,7 @@ export const CreateGroup = () => {
   const [ frequency, setFrequency ] = useState(0);
   const [ createEmpty, setCreateEmpty ] = useState(false);
   const [ show, setShow ] = useState("Select Show");
+  const [ popup, setPopup ] = useState('');
 
   const handleCreateGroup = async (e) => {
     const userId = cookies.get('userId');
@@ -27,14 +29,16 @@ export const CreateGroup = () => {
     await axios.post(`${URL}/createGroup`,
       { userId, frequency }
     );
+    setPopup("You successfully created a group.");
   }
 
   const handleFindGroup = async (e) => {
     const userId = cookies.get('userId');
     console.log({ userId, frequency, show })
     await axios.post(`${URL}/requestGroup`,
-    { userId, frequency, tvShow: show }
-  );
+      { userId, frequency, tvShow: show }
+    );
+    setPopup("You have a pending group. We'll find some other people to join you!");
   }
         
   return (
@@ -94,14 +98,24 @@ export const CreateGroup = () => {
             <Dropdown.Item onClick={() => setShow("Vikings Valhalla")}>Vikings Valhalla</Dropdown.Item>
           </DropdownButton>
         </div>
-        <Link to='/' className="find-link-wrapper">
-          <Button variant='dark' className='find-group-button' onClick={handleFindGroup}>Find Group!</Button>
-        </Link>
+        <Button variant='dark' className='find-group-button' onClick={handleFindGroup}>Find Group!</Button>
       </div>}
-      {createEmpty && 
-        <Link to='/' className="find-link-wrapper">
-          <Button variant='dark' className='find-group-button' onClick={handleCreateGroup}>Create Group!</Button>
-        </Link>}
+      {createEmpty && <Button variant='dark' className='find-group-button' onClick={handleCreateGroup}>Create Group!</Button>}
+      <Modal show={popup !== ''} onHide={() => setPopup('')}>
+        <Modal.Header closeButton>
+          <Modal.Title>Success!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {popup}
+        </Modal.Body>
+        <Modal.Footer>
+          <Link to='/' className="find-link-wrapper">
+            <Button variant="danger" onClick={() => {setPopup('')}}>
+              Ok!
+            </Button>
+          </Link>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
