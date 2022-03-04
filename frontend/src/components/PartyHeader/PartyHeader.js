@@ -12,7 +12,7 @@ import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-date-picker';
 import './PartyHeader.css';
 
-export const PartyHeader = ( {setIsEditing} ) => {
+export const PartyHeader = ( {setIsEditing, handleLeave} ) => {
   // const { channel, setIsEditing } = props;
   const { client } = useChatContext();
   const { closeThread } = useChannelActionContext();
@@ -37,6 +37,7 @@ export const PartyHeader = ( {setIsEditing} ) => {
         break;
     }
   }
+
   const handleShow = (type) => setShow(type);
 
   const [nameInput, setNameInput] = useState(channel.data.name);
@@ -66,6 +67,7 @@ export const PartyHeader = ( {setIsEditing} ) => {
           <p className='party-header__bold'>{watchInput}</p>
         </Button>
         <Button onClick={() => handleShow('invite')}variant="danger" className='party-header__button'>Invite Friends</Button>
+        <Button onClick={() => handleShow('settings')}variant="danger" className='party-header__button'>Settings</Button>
 
         <Modal show={show === 'invite'} onHide={handleCancel}>
           <Modal.Header closeButton>
@@ -137,6 +139,20 @@ export const PartyHeader = ( {setIsEditing} ) => {
             </Button>
             <Button variant="danger" onClick={() => handleSave('show')}>
               Save
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal show={show === 'settings'} onHide={handleCancel}>
+          <Modal.Header closeButton>
+            <Modal.Title>Settings</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Button variant="danger" onClick={handleLeave}>Leave Group</Button>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={handleCancel}>
+              Ok
             </Button>
           </Modal.Footer>
         </Modal>
