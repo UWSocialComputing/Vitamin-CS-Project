@@ -42,44 +42,42 @@ export const Login = () => {
 
   return (
     <div className='login-parent'>
-      <div className='login-container'>
-        <h1>Sign In</h1>
-        <div className="login-form">
-          <Form onSubmit={handleLogin}>
-            <Form.Group className="username" controlId="formUsername">
-              <Form.Label className="username-label">Username</Form.Label>
-              <Form.Control
-                className="username-input"
-                type="text"
-                placeholder="Enter Username"
-                value={username}
-                onChange={handleUsernameChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="password" controlId="formPassword">
-              <Form.Label className="password-label">Password</Form.Label>
-              <Form.Control
-                className="password-input"
-                type="text"
-                placeholder="Enter Password"
-                value={password}
-                onChange={handlePasswordChange}
-                required
-              />
-            </Form.Group>
-            <Button
-              type="submit"
-              variant="danger"
-              className='login-button-one'>
-                Sign In
-            </Button>
-          </Form>
+      <Form onSubmit={handleLogin} className='login-container'>
+        <div className='card'>
+          <h1>Log In</h1>
+          <Form.Group className="username" controlId="formUsername">
+            <Form.Label className="username-label">USERNAME</Form.Label>
+            <Form.Control
+              className="username-input"
+              type="text"
+              placeholder="Enter Username"
+              value={username}
+              onChange={handleUsernameChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="password" controlId="formPassword">
+            <Form.Label className="password-label">PASSWORD</Form.Label>
+            <Form.Control
+              className="password-input"
+              type="text"
+              placeholder="Enter Password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+            />
+          </Form.Group>
+          <Button
+            type="submit"
+            variant="danger"
+            className='login-button-one'>
+              Log In
+          </Button>
         </div>
-      </div>
+      </Form>
       <div className='create-switch'>
         <h3>New To Look Club?</h3>
-        <div className="create-text"><h6>Sign up and start watching shows with friends today</h6></div>
+        <div className="create-text"><h6>Create an account to start watching shows with friends today</h6></div>
         <Link to="/signup">
           <Button variant="default" className='create-button-one'>Create Account</Button>
         </Link>

@@ -1,5 +1,5 @@
 import { useState, React } from 'react';
-import './Signup.css';
+import './Login.css';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
@@ -42,42 +42,40 @@ export const Signup = () => {
   if (cookies.get('token')) return <Navigate to="/" exact/>;
 
   return (
-    <div className='signup-parent'>
-      <div className='signup-container'>
-        <h1>Create Account</h1>
-        <div className="signup-form">
-          <Form onSubmit={handlesignup}>
-            <Form.Group className="username" controlId="formUsername">
-              <Form.Label className="username-label">Username</Form.Label>
-              <Form.Control
-                className="username-input"
-                type="text"
-                placeholder="Enter Username"
-                value={username}
-                onChange={handleUsernameChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="password" controlId="formPassword">
-              <Form.Label className="password-label">Password</Form.Label>
-              <Form.Control
-                className="password-input"
-                type="text"
-                placeholder="Enter Password"
-                value={password}
-                onChange={handlePasswordChange}
-                required
-              />
-            </Form.Group>
-            <Button type="submit" variant="danger" className='signup-button'>Create Account</Button>
-          </Form>
+    <div className='login-parent'>
+      <Form onSubmit={handlesignup} className='login-container'>
+        <div className='card'>
+          <h1>Sign Up</h1>
+          <Form.Group className="username" controlId="formUsername">
+            <Form.Label className="username-label">USERNAME</Form.Label>
+            <Form.Control
+              className="username-input"
+              type="text"
+              placeholder="Enter Username"
+              value={username}
+              onChange={handleUsernameChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="password" controlId="formPassword">
+            <Form.Label className="password-label">PASSWORD</Form.Label>
+            <Form.Control
+              className="password-input"
+              type="text"
+              placeholder="Enter Password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+            />
+          </Form.Group>
+          <Button type="submit" variant="danger" className='login-button-one'>Create Account</Button>
         </div>
-      </div>
-      <div className='signin-switch'>
+      </Form>
+      <div className='create-switch'>
         <h3>Already Have An Account?</h3>
-        <div className="signin-text"><h6>Log into your account and start talking everything TV!</h6></div>
+        <div className="create-text"><h6>Log into your account and start talking everything TV!</h6></div>
         <Link to="/login">
-          <Button variant="default" className='signin-button'>Sign In</Button>
+          <Button variant="default" className='create-button-one'>Sign In</Button>
         </Link>
       </div>
     </div>

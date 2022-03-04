@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
+import { ReactComponent as Logo } from './../../Logo.svg';
 
 const cookies = new Cookies();
 
@@ -17,11 +18,12 @@ export const NavBar = () => {
     window.location.reload();
   }
 
-
-
   return (
     <div className='nav-bar'>
-      <div className='nav-logo'><h1>Look Club</h1></div>
+      <div className='nav-logo'>
+        <Logo className='logo'/>
+        <h1>Look Club</h1>
+      </div>
       <div className="nav-options">
         <Link to="/">
           <Button variant="default" className='nav-clubs'>My Clubs</Button>

@@ -12,8 +12,15 @@
 }
 
 .nav-logo {
-  width: 30%;
   padding-left: 2%;
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+}
+
+.logo {
+  margin-right: 20px;
+  align-self: center;
 }
 
 .nav-options {

@@ -15,7 +15,6 @@ import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
 export const PartyHeader = ( {setIsEditing} ) => {
-  // const { channel, setIsEditing } = props;
   const { client } = useChatContext();
   const { closeThread } = useChannelActionContext();
   const { channel } = useChannelStateContext();
@@ -83,7 +82,7 @@ export const PartyHeader = ( {setIsEditing} ) => {
             <Modal.Title>Invite Your Friends!</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p className='party-header__regular'>Send your friends this link:</p> 
+            <p className='party-header__regular'>Send your friends this link:</p>
             <p className='party-header__bold'>{`localhost:3000/invite/${channel.id}`}</p>
           </Modal.Body>
           <Modal.Footer>
