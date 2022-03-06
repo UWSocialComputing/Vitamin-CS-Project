@@ -1,10 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+.creategroup__theater {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(to bottom, #3b3b3b, #000000);
+}
+
 .creategroup-container {
   width: 70%;
+  max-width: 800px;
   height: 100%;
-  margin: auto;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 * {
@@ -12,40 +22,27 @@
 }
 
 .creategroup-title {
-  padding-top: 100px;
-  padding-bottom: 60px;
+  margin-bottom: 40px;
   font-weight: 600;
+  color: white;
 }
 
 .create-text-wrapper,
 .create-tv-wrapper {
   display:flex;
   flex-direction: row;
+  align-items: center;
+  color: white;
 }
 
 .create-tv-wrapper {
   padding-top: 50px;
   padding-bottom: 50px;
 }
-.time-image {
-  background-image: url('../../../public/images/Time.jpg');
-  background-size: 20px;
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
-
-.tv-image {
-  background-image: url('../../../public/images/TVlogo.jpg');
-  background-size: 20px;
-  width: 20px;
-  height: 25px;
-  margin-right: 10px;
-}
 
 .find-group-button {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
   border-radius: 100px;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
 }
@@ -55,3 +52,37 @@
   height: 100%;
 }
 
+.creategroup__toggle {
+  margin-bottom: 40px;
+}
+
+.creategroup__dropdown {
+  margin-left: 20px;
+}
+
+.h6 {
+  margin-bottom: 0px;
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+.info {
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.info h6 {
+  margin: 0px;
+}
+
+.info__icon {
+  margin-right: 10px;
+  min-width: 20px;
+  min-height: 20px;
+}
