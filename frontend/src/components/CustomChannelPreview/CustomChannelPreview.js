@@ -15,7 +15,7 @@ const shiba = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1AmDqL2HOj
 export const CustomChannelPreview = (props) => {
   const { channel, setActiveChannel, setIsCreating } = props;
 
-  const { channel: activeChannel, client } = useContext(ChatContext);
+  const { channel: activeChannel } = useContext(ChatContext);
 
   return (
     <div
