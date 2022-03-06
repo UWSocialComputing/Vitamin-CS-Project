@@ -1,16 +1,14 @@
 import { React, useState } from 'react';
 import './CreateGroup.css';
-import Button from 'react-bootstrap/Button';
 import { ButtonGroup, ToggleButton, DropdownButton, Dropdown } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Form from 'react-bootstrap/Form';
-import { Link, Navigate } from 'react-router-dom';
-import axios from 'axios';
-import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
-import RangeSlider from 'react-bootstrap-range-slider';
-import Cookies from 'universal-cookie';
-import { DefaultSuggestionListHeader } from 'stream-chat-react';
+import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import RangeSlider from 'react-bootstrap-range-slider';
+import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'universal-cookie';
 import { ReactComponent as Clock } from '../../Clock.svg';
 import { ReactComponent as TV } from '../../TV.svg';
 import { ReactComponent as Info } from '../../Info.svg';
@@ -19,25 +17,31 @@ const cookies = new Cookies();
 
 const URL = "http://localhost:8000";
 
-export const CreateGroup = () => {
+/*
+  CREATE GROUP
 
+  Page which lets users create a new group, either a Random Group or an Instant Group.
+*/
+export const CreateGroup = () => {
   const [ frequency, setFrequency ] = useState(0);
   const [ createEmpty, setCreateEmpty ] = useState(false);
   const [ show, setShow ] = useState("Select Show");
   const [ popup, setPopup ] = useState('');
 
+  // Creates a group immediately on the backend (with the user alone)
   const handleCreateGroup = async (e) => {
     const userId = cookies.get('userId');
-    console.log({ userId, frequency })
     await axios.post(`${URL}/createGroup`,
       { userId, frequency }
     );
     setPopup("You successfully created a group.");
   }
 
+  // Creates a pending group request for the user based on the settings specified.
+  // The users group will be added once there are enough other users with similar
+  // requests.
   const handleFindGroup = async (e) => {
     const userId = cookies.get('userId');
-    console.log({ userId, frequency, show })
     await axios.post(`${URL}/requestGroup`,
       { userId, frequency, tvShow: show }
     );
@@ -95,6 +99,9 @@ export const CreateGroup = () => {
           <div className="create-tv-wrapper">
             <TV />
             <h6 className='h6'>Which show do you want to watch?</h6>
+            {/* For now, the shows available to watch are a limited selection (so
+                our user base doesn't become too stratified. In the future, we hope
+                to have a more extensive list.) */}
             <DropdownButton id="dropdown-basic-button" title={show} variant="danger" className="creategroup__dropdown">
               <Dropdown.Item onClick={() => setShow("Attack on Titan")}>Attack on Titan</Dropdown.Item>
               <Dropdown.Item onClick={() => setShow("Euphoria")}>Euphoria</Dropdown.Item>
