@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const { signup, login } = require('./routes/authenticate.js')
-const { createGroup, joinGroup, requestGroup, spoilerCheck } = require('./routes/groups.js')
+const { createGroup, joinGroup, requestGroup, spoilerCheck, spoilerUpdate } = require('./routes/groups.js')
 
 const authRoutes = require('./routes/authenticate.js');
 
@@ -25,6 +25,8 @@ app.post('/joinGroup', joinGroup);
 app.post('/requestGroup', requestGroup);
 
 app.post('/spoilerCheck', spoilerCheck);
+
+app.post('/spoilerUpdate', spoilerUpdate);
 
 app.listen(port, () => {
     // perform a database connection when server starts

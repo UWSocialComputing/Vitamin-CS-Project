@@ -38,7 +38,6 @@ if(authToken) {
     for (const property in channels) {
       channelIds.push(`${channels[property].id}`);
     }
-    console.log(channelIds);
     const userId = cookies.get('userId');
     axios.post('http://localhost:8000/spoilerCheck',
       { userId, channelIds }

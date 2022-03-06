@@ -9,8 +9,9 @@ import {
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
-import DatePicker from 'react-date-picker';
 import './PartyHeader.css';
+import Dropdown from 'react-bootstrap/Dropdown';
+import axios from 'axios';
 
 export const PartyHeader = ( {setIsEditing} ) => {
   // const { channel, setIsEditing } = props;
@@ -19,7 +20,14 @@ export const PartyHeader = ( {setIsEditing} ) => {
   const { channel } = useChannelStateContext();
 
   const [show, setShow] = useState('none');
-  const handleCancel = () => setShow('none');
+  const handleCancel = (field) => {
+    switch (field) {
+      case 'date':
+      setNextDate(currentDate);
+    }
+    setShow('none');
+  };
+
   const handleSave = async (field) => {
     setShow('none');
     switch (field) {
@@ -27,7 +35,20 @@ export const PartyHeader = ( {setIsEditing} ) => {
         await channel.updatePartial({ set:{ name: nameInput}});
         break;
       case 'date':
-        await channel.updatePartial({ set: { date: '' + (nextDate.getMonth() + 1) + '/' + nextDate.getDate() }});
+        if (client.user[channel.id] !== 'none') {
+          console.log(client.user);
+          console.log(nextDate);
+          const userId = client.user.id;
+          const channelId = channel.id;
+          const date = nextDate.toISOString();
+          await axios.post('http://localhost:8000/spoilerUpdate',
+            { userId, channelId, date }
+          );
+          await channel.updatePartial({ set: { date: '' + (nextDate.getMonth() + 1) + '/' + nextDate.getDate() }});
+          setCurrentDate(nextDate);
+        } else {
+          await channel.updatePartial({ set: { date: 'Nothing Upcoming' }});
+        }
         break;
       case 'episode':
         await channel.updatePartial({ set: { episode: nextEpisode }});
@@ -39,17 +60,63 @@ export const PartyHeader = ( {setIsEditing} ) => {
   }
   const handleShow = (type) => setShow(type);
 
+  let dateString = ''
+  if (client.user[channel.id] != 'none') {
+    dateString = client.user[channel.id];
+  } else {
+    dateString = (new Date()).toISOString();
+  }
+
   const [nameInput, setNameInput] = useState(channel.data.name);
   const [nextEpisode, setNextEpisode] = useState(channel.data.episode);
-  const [nextDate, setNextDate] = useState(new Date());
+  const [nextDate, setNextDate] = useState(new Date(dateString));
+  const [currentDate, setCurrentDate] = useState(new Date(dateString));
   const [watchInput, setWatchInput] = useState(channel.data.show);
 
   const teamHeader = `# ${channel.data.name || channel.data.id || 'random'}`;
 
+  const helperDate = (day) => {
+    const d = new Date();
+    d.setDate(d.getDate() + ((7 - d.getDay()) + day));
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
   const getMessagingHeader = () => {
+    const user = client.user;
+    let currDate = new Date(user[channel.id]);
     const members = Object.values(channel.state.members).filter(
       ({ user }) => user.id !== client.userID,
     );
+
+    const handleDaySelect = async (e) => {
+      switch (e) {
+        case 'Sunday':
+          currDate = helperDate(0);
+          break;
+        case 'Monday':
+          currDate = helperDate(1);
+          break;
+        case 'Tuesday':
+          currDate = helperDate(2);
+          break;
+        case 'Wednesday':
+          currDate = helperDate(3);
+          break;
+        case 'Thursday':
+          currDate = helperDate(4);
+          break;
+        case 'Friday':
+          currDate = helperDate(5);
+          break;
+        case 'Saturday':
+          currDate = helperDate(6);
+          break;
+      }
+      setNextDate(currDate);
+      //await client.updatePartial({ id: user.id, set: { [channel.id]: currDate.toISOString() }});
+    }
+
     return (
       <div className='party-header__name-wrapper'>
         <Avatar image={null} size={50} />
@@ -105,10 +172,24 @@ export const PartyHeader = ( {setIsEditing} ) => {
           </Modal.Header>
           <Modal.Body>
             <div>
-              <label>Next Episode: </label><input type='text' value={nextEpisode} onChange={(e) => setNextEpisode(e.target.value)} />
+              <label>Watch Up To: </label><input type='text' value={nextEpisode} onChange={(e) => setNextEpisode(e.target.value)} />
             </div>
             <div>
-              <label>Due By: </label><DatePicker onChange={e => setNextDate(e)} value={nextDate}/>
+              <label>Weekly Deadline: </label>
+              <Dropdown onSelect={handleDaySelect}>
+                <Dropdown.Toggle variant="danger" id="dropdown-date">
+                  Day of the Week (Recurring)
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item eventKey="Monday">By Next Monday</Dropdown.Item>
+                  <Dropdown.Item eventKey="Tuesday">By Next Tuesday</Dropdown.Item>
+                  <Dropdown.Item eventKey="Wednesday">By Next Wednesday</Dropdown.Item>
+                  <Dropdown.Item eventKey="Thursday">By Next Thursday</Dropdown.Item>
+                  <Dropdown.Item eventKey="Friday">By Next Friday</Dropdown.Item>
+                  <Dropdown.Item eventKey="Saturday">By Next Saturday</Dropdown.Item>
+                  <Dropdown.Item eventKey="Sunday">By Next Sunday</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
           </Modal.Body>
           <Modal.Footer>

@@ -16,7 +16,7 @@ exports.spoilerCheck = async (req, res) => {
     const channelList = [];
 
     channelIds.forEach(channelId => {
-      let update = new Date(users[0][channelId]) < new Date();
+      let update = new Date(users[0][channelId]) > new Date();
       channelList.push({ [channelId]: update });
     });
 
@@ -27,12 +27,12 @@ exports.spoilerCheck = async (req, res) => {
   }
 }
 
-exports.updateSpoiler = async (req, res) => {
+exports.spoilerUpdate = async (req, res) => {
   try {
     const { userId, channelId, date } = req.body;
     const client = new StreamChat(api_key, api_secret);
-
     updateCheckIn(client, userId, channelId, date);
+    res.status(200).json({ status: true });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error });
