@@ -7,6 +7,38 @@ const { ObjectId } = require('mongodb');
 const api_key = process.env.STREAM_KEY;
 const api_secret = process.env.STREAM_SECRET;
 
+exports.spoilerCheck = async (req, res) => {
+  try {
+    const { userId, channelIds } = req.body;
+    const client = new StreamChat(api_key, api_secret);
+    const { users } = await client.queryUsers({ id: userId });
+
+    const channelList = [];
+
+    channelIds.forEach(channelId => {
+      let update = new Date(users[0][channelId]) > new Date();
+      channelList.push({ [channelId]: update });
+    });
+
+    res.status(200).json({ status: channelList });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error });
+  }
+}
+
+exports.spoilerUpdate = async (req, res) => {
+  try {
+    const { userId, channelId, date } = req.body;
+    const client = new StreamChat(api_key, api_secret);
+    updateCheckIn(client, userId, channelId, date);
+    res.status(200).json({ status: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error });
+  }
+}
+
 exports.createGroup = async (req, res) => {
   try {
     const { userId, frequency } = req.body;
@@ -21,7 +53,7 @@ exports.createGroup = async (req, res) => {
     const newGroup = { members: [users[0].id] }
     await groups.insertOne(newGroup);
 
-    const groupId = newGroup._id.toString();
+    const groupId = newGroup._id.toString()
 
     const channel = client.channel('team', groupId, {
       created_by_id: userId,
@@ -34,11 +66,23 @@ exports.createGroup = async (req, res) => {
 
     await channel.addMembers([users[0].id]);
 
+    updateCheckIn(client, userId, channel.id);
+
     res.status(200).json({ status: 100 });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error });
   }
+}
+
+const updateCheckIn = async (client, userId, channelId, date) => {
+  const update = {
+    id: userId,
+    set: {
+      [channelId]: date
+    }
+  }
+  await client.partialUpdateUser(update);
 }
 
 exports.joinGroup = async (req, res) => {
@@ -57,9 +101,11 @@ exports.joinGroup = async (req, res) => {
   }
 
   channel.addMembers([userId])
+
+  updateCheckIn(client, await client.queryUsers({ id: userId }), channel.id);
 }
 
-// Note: The request matching code doesn't work for scale, there is no upper limit to  
+// Note: The request matching code doesn't work for scale, there is no upper limit to
 //  group matching which could be an issue with a lot of simultaneous requests
 exports.requestGroup = async (req, res) => {
   try {
@@ -99,7 +145,7 @@ exports.requestGroup = async (req, res) => {
       const groupId = newGroup._id;
 
       const client = new StreamChat(api_key, api_secret);
-      const channel = client.channel('team', groupId.toString(), { 
+      const channel = client.channel('team', groupId.toString(), {
         created_by_id: userId,
         name: `${tvShow} Club`,
         show: tvShow,

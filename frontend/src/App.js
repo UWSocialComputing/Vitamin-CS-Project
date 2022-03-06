@@ -14,6 +14,7 @@ import { CreateGroup } from './components/CreateGroup/CreateGroup';
 import { BrowserRouter as Router, Route, Routes, Navigate, useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
+import { SpoilerShield } from './components/SpoilerShield/SpoilerShield';
 
 const apiKey = clientConfig.streamKey;
 
@@ -26,8 +27,28 @@ if(authToken) {
       id: cookies.get('userId'),
       name: cookies.get('username'),
       token: cookies.get('token'),
-      hashedPassword: cookies.get('hashedPassword')
-  }, authToken)
+      hashedPassword: cookies.get('hashedPassword'),
+  }, authToken);
+
+  const channels = client.activeChannels;
+  const channelIds = [];
+  console.log(channels);
+
+  const test = async () => {
+    for (const property in channels) {
+      channelIds.push(`${channels[property].id}`);
+    }
+    const userId = cookies.get('userId');
+    axios.post('http://localhost:8000/spoilerCheck',
+      { userId, channelIds }
+    ).then(response => {
+      cookies.set('spoilerStatus', response.data.status);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  setTimeout(test, 1000);
 }
 
 const filters = { members: { $in: [cookies.get('userId')] } };
@@ -40,30 +61,7 @@ const App = () => {
 
   useEffect(() => {
     const initChat = async () => {
-
       setChatClient(client);
-
-      // Add channel
-      // const channel = client.channel('team', 'test2', {
-      //   name: 'test2',
-      //   channel_detail: { watching: 'Squidward Game', nextUp: 'Ep 10 by Thursday'}
-      // });
-
-      // await channel.watch();
-
-      // await channel.addMembers(['elijah']);
-
-      // Query channels
-      // const channels = await client.queryChannels(filters, sort, {
-      //     watch: true, // this is the default
-      // });
-
-      // channels.map((channel) => {
-      //         console.log(channel.data.name, channel.cid)
-      //     })
-
-      //     await channels[1].updatePartial({ set:{ name: 'test2' }});
-      //     console.log('hi');
     };
 
     initChat();
@@ -74,10 +72,8 @@ const App = () => {
   }
 
   const ChatScreen = () => {
-    
     if (!authToken) return <Navigate to="/login"/>;
 
-    
     return (
       <Chat client={chatClient} theme='messaging light'>
         <ChannelList
@@ -91,6 +87,7 @@ const App = () => {
           />
         <Channel>
           <Window>
+            <SpoilerShield />
             <PartyHeader />
             <MessageList />
             <MessageInput />
@@ -101,7 +98,7 @@ const App = () => {
     );
   };
 
-  const InviteWrapper = () => { 
+  const InviteWrapper = () => {
     const { id } = useParams();
     useEffect(() => {
       const addToGroup = async () => {

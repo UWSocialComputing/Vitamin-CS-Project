@@ -15,6 +15,7 @@ export const NavBar = () => {
     cookies.remove('userId');
     cookies.remove('username');
     cookies.remove('hashedPassword');
+    cookies.remove('spoilerStatus')
     window.location.reload();
   }
 
