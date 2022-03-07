@@ -7,14 +7,23 @@ const { ObjectId } = require('mongodb');
 const api_key = process.env.STREAM_KEY;
 const api_secret = process.env.STREAM_SECRET;
 
+/** Gets spoiler information for 
+ *  a list of channels for a specific 
+ *  user.
+ * 
+ * @param req request from express
+ * @param res result for express
+ */
 exports.spoilerCheck = async (req, res) => {
   try {
     const { userId, channelIds } = req.body;
     const client = new StreamChat(api_key, api_secret);
+    // get user
     const { users } = await client.queryUsers({ id: userId });
 
     const channelList = [];
 
+    // update each channel
     channelIds.forEach(channelId => {
       let update = new Date(users[0][channelId]) > new Date();
       channelList.push({ [channelId]: update });
@@ -27,6 +36,12 @@ exports.spoilerCheck = async (req, res) => {
   }
 }
 
+/** Updates spoiler information for a specific user and channel
+ *  to a specific date.
+ * 
+ * @param req request from express
+ * @param res result for express
+ */
 exports.spoilerUpdate = async (req, res) => {
   try {
     const { userId, channelId, date } = req.body;
@@ -39,33 +54,39 @@ exports.spoilerUpdate = async (req, res) => {
   }
 }
 
+/** Creates a group with a single user.
+ * 
+ * @param req request from express
+ * @param res result for express
+ */
 exports.createGroup = async (req, res) => {
   try {
-    const { userId, frequency } = req.body;
+    const { userId } = req.body;
 
     const client = new StreamChat(api_key, api_secret);
 
+    // get user
     const { users } = await client.queryUsers({ id: userId });
-
     if (!users.length) return res.status(400).json({ message: 'User not found' });
 
+    // get groups, insert new one
     const groups = dbo.getDb().collection("Groups");
     const newGroup = { members: [users[0].id] }
     await groups.insertOne(newGroup);
 
     const groupId = newGroup._id.toString()
 
+    // create new stream channel
     const channel = client.channel('team', groupId, {
       created_by_id: userId,
       name: "Give me a name!",
-      show: 'Choose a show',
-      frequency: frequency
+      show: 'Choose a show'
     });
 
     await channel.watch();
 
+    // add user to channel and "check in"
     await channel.addMembers([users[0].id]);
-
     updateCheckIn(client, userId, channel.id);
 
     res.status(200).json({ status: 100 });
@@ -75,6 +96,10 @@ exports.createGroup = async (req, res) => {
   }
 }
 
+/** 
+ * Checks in a single user to a channel.
+ * 
+ */
 const updateCheckIn = async (client, userId, channelId, date) => {
   const update = {
     id: userId,
@@ -85,6 +110,11 @@ const updateCheckIn = async (client, userId, channelId, date) => {
   await client.partialUpdateUser(update);
 }
 
+/** Joins a user into a channel.
+ * 
+ * @param req request from express
+ * @param res result for express
+ */
 exports.joinGroup = async (req, res) => {
   const { userId, channelId } = req.body;
 
@@ -92,9 +122,11 @@ exports.joinGroup = async (req, res) => {
   const channel = client.channel('team', channelId);
   const groups = dbo.getDb().collection("Groups");
 
+  // find matching channel
   const group = await groups.findOne({ "_id": new ObjectId(channelId) });
   const members = group.members;
 
+  // if this user is not already there, add them
   if (members.indexOf(userId) == -1) {
     members.push(userId)
     groups.updateOne({ "_id": new ObjectId(channelId) }, { $set: { members } })
@@ -102,11 +134,17 @@ exports.joinGroup = async (req, res) => {
 
   channel.addMembers([userId])
 
+  // check in user
   updateCheckIn(client, await client.queryUsers({ id: userId }), channel.id);
 }
 
-// Note: The request matching code doesn't work for scale, there is no upper limit to
-//  group matching which could be an issue with a lot of simultaneous requests
+/** Makes a pending request for a user with
+ * a TV show and frequency. If there are enough
+ * matches, will create a group.
+ * 
+ * @param req request from express
+ * @param res result for express
+ */
 exports.requestGroup = async (req, res) => {
   try {
     const { userId, frequency, tvShow } = req.body;
@@ -124,15 +162,18 @@ exports.requestGroup = async (req, res) => {
 
       const newGroup = { members: [userId] }
 
+      // get the requests that match
       const matchedRequests = pendingRequests.find({
         $and: [{ tvShow: tvShow },
         { frequency: { $in: [intFreq, intFreq - 1, intFreq + 1] } }]
       }, { "userId": 1, _id: 0 });
 
+      // create a list of all the members
       matchedRequests.forEach(function (request) {
         newGroup.members.push(request.userId);
       });
 
+      // remove the pending requests
       pendingRequests.deleteMany({
         $and: [{ tvShow: tvShow }, {
           frequency:
@@ -140,10 +181,12 @@ exports.requestGroup = async (req, res) => {
         }]
       });
 
+      // add this group into DB
       const groups = dbo.getDb().collection("Groups");
       await groups.insertOne(newGroup);
       const groupId = newGroup._id;
 
+      // create channel in stream
       const client = new StreamChat(api_key, api_secret);
       const channel = client.channel('team', groupId.toString(), {
         created_by_id: userId,
@@ -151,7 +194,7 @@ exports.requestGroup = async (req, res) => {
         show: tvShow,
         frequency: frequency
       });
-      console.log(newGroup.members);
+      
       await channel.watch();
       await channel.addMembers(newGroup.members);
 

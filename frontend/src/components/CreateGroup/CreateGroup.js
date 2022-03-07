@@ -32,7 +32,7 @@ export const CreateGroup = () => {
   const handleCreateGroup = async (e) => {
     const userId = cookies.get('userId');
     await axios.post(`${URL}/createGroup`,
-      { userId, frequency }
+      { userId }
     );
     setPopup("You successfully created a group.");
   }
