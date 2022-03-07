@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
-import { ReactComponent as Logo } from './../../Logo.svg';
+import { ReactComponent as Logo } from './../../logo.svg';
 
 const cookies = new Cookies();
 
