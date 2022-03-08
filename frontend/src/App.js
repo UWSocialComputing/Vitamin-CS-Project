@@ -22,6 +22,8 @@ const cookies = new Cookies();
 const authToken = cookies.get("token");
 const client = StreamChat.getInstance(apiKey);
 
+// Log in authentification through checking if cookies store a token generated at the start
+// of a session. if yes, they reinstate the user and they remain signed in.
 if(authToken) {
   client.connectUser({
       id: cookies.get('userId'),
@@ -32,8 +34,9 @@ if(authToken) {
 
   const channels = client.activeChannels;
   const channelIds = [];
-  console.log(channels);
 
+  // setting up our spoiler system to get the status of every group at the moment (if it is
+  // past a milestone or not for each group)
   const test = async () => {
     for (const property in channels) {
       channelIds.push(`${channels[property].id}`);
@@ -55,6 +58,14 @@ const filters = { members: { $in: [cookies.get('userId')] } };
 const sort = { last_message_at: -1 };
 const options = { state: true, watch: true, presence: true };
 
+
+/** CSE 481 Capstone Project - Winter 2022
+ * Shaurya Jain, Elijah Greisz, Logan Wang, William Castro
+ *
+ * App
+ * Main rendering page, displaying the stream chat container as well as our custom
+ * components.
+ */
 const App = () => {
   const [chatClient, setChatClient] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -98,6 +109,7 @@ const App = () => {
     );
   };
 
+  // Custom invite logic to that users can join a group by following an invite link to the group.
   const InviteWrapper = () => {
     const { id } = useParams();
     useEffect(() => {

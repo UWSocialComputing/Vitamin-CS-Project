@@ -48,8 +48,10 @@ form {
   width: 30%;
 }
 
-.username-label,
-.password-label {
+.username-label-signup,
+.username-label-login,
+.password-label-signup,
+.password-label-login {
   font-weight: 600;
   margin: 0px 0px 4px 0px;
   font-size: 12px;
@@ -128,10 +130,26 @@ form {
   height: 50px;
 }
 
-.card {
+.card-login,
+.card-signup {
   padding: 40px;
   border-radius: 20px;
-  background-color: rgba(255, 255, 255, 0.50);
   border: none;
   width: 450px;
 }
+
+.card-login {
+  background-color: rgba(255, 255, 255, 0.50);
+}
+
+.card-signup {
+  background-color: rgba(36, 17, 17, 0.5);
+}
+
+.signup-title,
+.username-label-signup,
+.password-label-signup {
+  color: white;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+}
+

@@ -17,6 +17,14 @@ export const CustomChannelPreview = (props) => {
 
   const { channel: activeChannel } = useContext(ChatContext);
 
+  const buildDateString = () => {
+    if (channel.data.date === "No Schedule Set") {
+      return "No Schedule Set";
+    } else {
+      return "by " + channel.data.date;
+    }
+  }
+
   return (
     <div
       className={
@@ -37,7 +45,7 @@ export const CustomChannelPreview = (props) => {
           </p>
         </div>
         <p className='channel-preview__content-message'>{channel.data.show}</p>
-        <p className='channel-preview__content-message'>{channel.data.episode} by {channel.data.date}</p>
+        <p className='channel-preview__content-message'>{channel.data.episode} {buildDateString()}</p>
       </div>
     </div>
   );

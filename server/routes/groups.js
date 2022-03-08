@@ -7,10 +7,10 @@ const { ObjectId } = require('mongodb');
 const api_key = process.env.STREAM_KEY;
 const api_secret = process.env.STREAM_SECRET;
 
-/** Gets spoiler information for 
- *  a list of channels for a specific 
+/** Gets spoiler information for
+ *  a list of channels for a specific
  *  user.
- * 
+ *
  * @param req request from express
  * @param res result for express
  */
@@ -25,8 +25,12 @@ exports.spoilerCheck = async (req, res) => {
 
     // update each channel
     channelIds.forEach(channelId => {
-      let update = new Date(users[0][channelId]) > new Date();
-      channelList.push({ [channelId]: update });
+      if (users[0][channelId] === 'none') {
+        channelList.push(true);
+      } else {
+        let update = new Date(users[0][channelId]) > new Date();
+        channelList.push({ [channelId]: update });
+      }
     });
 
     res.status(200).json({ status: channelList });
@@ -38,7 +42,7 @@ exports.spoilerCheck = async (req, res) => {
 
 /** Updates spoiler information for a specific user and channel
  *  to a specific date.
- * 
+ *
  * @param req request from express
  * @param res result for express
  */
@@ -55,7 +59,7 @@ exports.spoilerUpdate = async (req, res) => {
 }
 
 /** Creates a group with a single user.
- * 
+ *
  * @param req request from express
  * @param res result for express
  */
@@ -80,14 +84,16 @@ exports.createGroup = async (req, res) => {
     const channel = client.channel('team', groupId, {
       created_by_id: userId,
       name: "Give me a name!",
-      show: 'Choose a show'
+      show: 'Choose a show',
+      date: "No Schedule Set",
+      preciseDate: "No Schedule Set"
     });
 
     await channel.watch();
 
     // add user to channel and "check in"
     await channel.addMembers([users[0].id]);
-    updateCheckIn(client, userId, channel.id);
+    updateCheckIn(client, userId, channel.id, 'none');
 
     res.status(200).json({ status: 100 });
   } catch (error) {
@@ -96,9 +102,9 @@ exports.createGroup = async (req, res) => {
   }
 }
 
-/** 
+/**
  * Checks in a single user to a channel.
- * 
+ *
  */
 const updateCheckIn = async (client, userId, channelId, date) => {
   const update = {
@@ -111,7 +117,7 @@ const updateCheckIn = async (client, userId, channelId, date) => {
 }
 
 /** Joins a user into a channel.
- * 
+ *
  * @param req request from express
  * @param res result for express
  */
@@ -135,13 +141,13 @@ exports.joinGroup = async (req, res) => {
   channel.addMembers([userId])
 
   // check in user
-  updateCheckIn(client, await client.queryUsers({ id: userId }), channel.id);
+  updateCheckIn(client, userId, channel.id, 'none');
 }
 
 /** Makes a pending request for a user with
  * a TV show and frequency. If there are enough
  * matches, will create a group.
- * 
+ *
  * @param req request from express
  * @param res result for express
  */
@@ -168,9 +174,11 @@ exports.requestGroup = async (req, res) => {
         { frequency: { $in: [intFreq, intFreq - 1, intFreq + 1] } }]
       }, { "userId": 1, _id: 0 });
 
+      const client = new StreamChat(api_key, api_secret);
       // create a list of all the members
       matchedRequests.forEach(function (request) {
         newGroup.members.push(request.userId);
+        updateCheckIn(client, request.userId, newGroup._id, 'none');
       });
 
       // remove the pending requests
@@ -185,16 +193,18 @@ exports.requestGroup = async (req, res) => {
       const groups = dbo.getDb().collection("Groups");
       await groups.insertOne(newGroup);
       const groupId = newGroup._id;
+      updateCheckIn(client, userId, groupId, 'none');
 
       // create channel in stream
-      const client = new StreamChat(api_key, api_secret);
       const channel = client.channel('team', groupId.toString(), {
         created_by_id: userId,
         name: `${tvShow} Club`,
         show: tvShow,
-        frequency: frequency
+        frequency: frequency,
+        date: 'No Schedule Set',
+        preciseDate: "No Schedule Set"
       });
-      
+
       await channel.watch();
       await channel.addMembers(newGroup.members);
 

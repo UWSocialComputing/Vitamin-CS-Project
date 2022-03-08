@@ -2,27 +2,39 @@ import { React, useState } from 'react';
 import './SpoilerShield.css';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { UserItem, MessageList, MessageInput } from 'stream-chat-react';
-import { channelReducer } from 'stream-chat-react/dist/components/Channel/channelState';
 import {
   useChannelStateContext,
   useChatContext
 } from 'stream-chat-react';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
-import { PartyHeader } from '../PartyHeader/PartyHeader';
 
 const cookies = new Cookies();
 
+/**
+  * CSE 481 Capstone Project - Winter 2022
+  * Shaurya Jain, Elijah Greisz, Logan Wang, William Castro
+  *
+  * Spoiler Shield
+  * Determines if the user messaging channel can be displayed or if it needs to be
+  * shielded for spoilers. Shields the user if the group decides to set a watch schedule,
+  * looking to watch a certain episode(s) by a recurring day of the week, and the current day is
+  * past the agreed recurring day.
+  */
 export const SpoilerShield = () => {
 
   const { channel } = useChannelStateContext();
   const { client } = useChatContext();
   const channelId = channel.id;
   let spoilerStatus = true;
+  // governs whether spoilershield needs to be displayed or not.
+  // 0 === loading, 1 === no, 2 === yes
   const [showMessages, setShowMessages] = useState(0);
 
-
+  /**
+  * Gets information of the spoiler status of the user's session from the site cookie.
+  * Sets whether to show messages or to shield them.
+  */
   const spoilerInfo = () => {
     const spoilers = cookies.get('spoilerStatus');
     spoilers.forEach(cId => {
@@ -35,15 +47,15 @@ export const SpoilerShield = () => {
     } else {
       setShowMessages(1);
     }
-    console.log(cookies);
   };
 
   setTimeout(spoilerInfo, 1000);
 
-
-
-  const handleUpdate = async (e) => {
-    console.log(client.user);
+  /**
+  * Updates the date information stored for the user and the channel to a week
+  * after the milestone date.
+  */
+  const handleUpdate = async () => {
     const spoilers = cookies.get('spoilerStatus');
     const userId = cookies.get('userId');
     const channelId = channel.id;
@@ -51,13 +63,11 @@ export const SpoilerShield = () => {
     nextDate.setDate((nextDate.getDate() + 7));
     nextDate.setHours(0, 0, 0, 0);
     const date = nextDate.toISOString();
-    console.log("here");
     const { data: { status } } =
     await axios.post('http://localhost:8000/spoilerUpdate',
       { userId, channelId, date }
     );
 
-    let i = 0;
     let newSpoilerArr = [];
     spoilers.forEach(cId => {
       if (cId.hasOwnProperty(channelId.toString())) {
@@ -66,17 +76,22 @@ export const SpoilerShield = () => {
       } else {
         newSpoilerArr.push(cId);
       }
-      i++;
     });
-    console.log("this is how the cookies used to look")
-    console.log(cookies);
     cookies.set('spoilerStatus', newSpoilerArr);
-    console.log("This is how they look now");
-    console.log(cookies);
     await channel.updatePartial({ set: { date: '' + (nextDate.getMonth() + 1) + '/' + nextDate.getDate() }});
-    setTimeout(() => console.log(client.user), 1000);
     setShowMessages(2);
+    setTimeout(() => window.location.reload(), 1000);
   }
+
+  const getDateString = (date) => {
+    const d = new Date(date);
+    return (d.getMonth() + 1) + '/' + d.getDate();
+  }
+
+  // Conditional rendering scheme, where if it is past the date,
+  // we render the shield (showMessages === 1). If (showMessages === 2), we do
+  // shield the messages. If (showMessages === 0), we have not gotten the information
+  // to shield of hide so we wait a second and display nothing tentatively.
   if (showMessages === 2) {
     return (
       <div className='none'/>
@@ -85,7 +100,7 @@ export const SpoilerShield = () => {
     return (
       <div className='spoilerShield'>
         <p>
-          Today is past {channel.data.date}. The following may contain spoilers through {channel.data.episode}.
+          Today is past {getDateString(client.user[channel.id])}. The following may contain spoilers through {channel.data.episode}.
         </p>
         <Button variant='dark' className='spoilerShield__button' onClick={handleUpdate}>I'm caught up!</Button>
       </div>

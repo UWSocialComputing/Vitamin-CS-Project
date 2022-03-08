@@ -8,52 +8,75 @@ import Cookies from 'universal-cookie';
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios';
 
-/*
-  PARTY HEADER
-  Custom header for each watch party. Shows the party name, watch schedule, what
-  show is currently being watched, Invite button, and Settings button.
-
-  Users can click on each part of the party header to edit them.
-*/
 const cookies = new Cookies();
 
+/**
+  * CSE 481 Capstone Project - Winter 2022
+  * Shaurya Jain, Elijah Greisz, Logan Wang, William Castro
+  *
+  * PARTY HEADER
+  * Custom header for each watch party. Shows the party name, watch schedule, what
+  * show is currently being watched, Invite button, and Settings button.
+  * Users can click on each part of the party header to edit them.
+  */
 export const PartyHeader = () => {
+  // Information about the Stream client and channel currently signed in
   const { client } = useChatContext();
   const { channel } = useChannelStateContext();
-  // |show| determines which Popup to show: ['none', 'invite', 'title', 'up next', 'currently watching', 'settings']
-  const [show, setShow] = useState('none');
-  const userId = cookies.get('userId');
   const user = client.user;
   let currDate = new Date(user[channel.id]);
+  const [dateString, setDateString] = useState(channel.data.date);
 
-  let dateString = ''
-  if (client.user[channel.id] != 'none') {
-    dateString = client.user[channel.id];
-  } else {
-    dateString = (new Date()).toISOString();
-  }
-
+  // |show| determines which Popup to show:
+  //  ['none', 'invite', 'title', 'up next', 'currently watching', 'settings']
+  const [show, setShow] = useState('none');
+  // Input state variables recording user typed input to customize what they are watching and
+  // their group name
   const [nameInput, setNameInput] = useState(channel.data.name);
-  const [nextEpisode, setNextEpisode] = useState(channel.data.episode);
-  const [nextDate, setNextDate] = useState(new Date(dateString));
-  const [currentDate, setCurrentDate] = useState(new Date(dateString));
   const [watchInput, setWatchInput] = useState(channel.data.show);
+  // State variables for the next episodes to be watched, and date variables to track
+  // date selection and handling spoiler prevention.
+  const [nextEpisode, setNextEpisode] = useState(channel.data.episode);
+  const [nextDate, setNextDate] = useState((dateString === 'No Schedule Set') ? 'No Schedule Set' : new Date(dateString));
+  const [currentDate, setCurrentDate] = useState((dateString === 'No Schedule Set') ? 'No Schedule Set' : new Date(dateString));
 
   // Opens popup specified by |type|
   const handleShow = (type) => setShow(type);
 
-  // Called whenever a popup is closed.
+  // Called whenever a pop up edit is canceled.
   const handleCancel = () => {
-    setShow('none');
+    setDateString(channel.data.date);
+    handleHide();
   };
+
+  // Called whenever a popup is closed.
+  const handleHide = () => {
+    setShow('none');
+  }
 
   // Removes user from current channel.
   const handleLeave = () => {
-    channel.removeMembers([userId]);
-    handleCancel();
+    channel.removeMembers([client.user.id]);
+    setTimeout(() => window.location.reload(), 1000);
   };
 
-  // Updates channel data upon saving
+  const updateAllUsers = async (response) => {
+    let userId = "";
+    let channelId = "";
+    const date = dateString;
+    response.members.forEach(async member => {
+      userId = member.user_id;
+      channelId = channel.id;
+      await axios.post('http://localhost:8000/spoilerUpdate',
+          {  userId, channelId, date }
+        );
+    });
+  }
+
+  /**
+  * Updates channel data upon the user saving their edits.
+  * @param {Event} field - classifies the save type to know what values to update.
+  */
   const handleSave = async (field) => {
     switch (field) {
       case 'name':
@@ -66,34 +89,44 @@ export const PartyHeader = () => {
         await channel.updatePartial({ set: { show: watchInput }});
         break;
       case 'date':
-        if (client.user[channel.id] !== 'none') {
-          const userId = client.user.id;
-          const channelId = channel.id;
-          const date = nextDate.toISOString();
-          await axios.post('http://localhost:8000/spoilerUpdate',
-            { userId, channelId, date }
-          );
-          await channel.updatePartial({ set: { date: '' + (nextDate.getMonth() + 1) + '/' + nextDate.getDate() }});
-          setCurrentDate(nextDate);
-        } else {
-          await channel.updatePartial({ set: { date: 'Nothing Upcoming' }});
-        }
+        const userId = client.user.id;
+        const channelId = channel.id;
+        const date = nextDate.toISOString();
+        await axios.post('http://localhost:8000/spoilerUpdate',
+          { userId, channelId, date }
+        );
+        await channel.updatePartial({ set: { date: dateString}});
+        await channel.updatePartial({ set: { preciseDate: date}});
+        setCurrentDate(nextDate);
+        let sort = {created_at: -1};
+        const response = await channel.queryMembers({}, sort, {});
+        setTimeout(() => updateAllUsers(response), 1000)
         break;
     }
     setShow('none');
   };
 
-  /* Given a |day| of the week, retruns the next date of that day. E.g. today is
-     Saturday, March 3. If |day| == 1 (Monday), helperDate() returns Monday, March
-     7. If |day| == 6 (Saturday), helperDate() returns Saturday, March 12.  */
+  /**
+  * Calculates the next day of the week closest to the current calendar day.
+  * @param {Number} day - The day of the week requested -
+  *   {Sun - 0, Mon - 1, Tues - 2, Wed - 3, Thu - 4, Fri - 5, Sat - 6}
+  * @returns {Date} - next date of that day. E.g. today is
+  *   Saturday, March 3. If |day| == 1 (Monday), helperDate() returns Monday, March 7.
+  *   If |day| == 6 (Saturday), helperDate() returns Saturday, March 12.
+  */
   const helperDate = (day) => {
     const d = new Date();
-    d.setDate(d.getDate() + ((7 - d.getDay()) + day));
+    const l = new Date();
+    l.setDate(d.getDate() - 2);
+;   d.setDate(d.getDate() + ((7 - d.getDay()) + day));
     d.setHours(0, 0, 0, 0);
-    return d;
+    return l;
   }
 
-  // Updates watch schedule to the next day of the week selected.
+  /**
+  * Updates watch schedule to the next day of the week selected.
+  * @param {Event} e - Option clicked with a specific associated Event Value
+  */
   const handleDaySelect = async (e) => {
     switch (e) {
       case 'Sunday':
@@ -118,7 +151,16 @@ export const PartyHeader = () => {
         currDate = helperDate(6);
         break;
     }
+    setDateString('' + (currDate.getMonth() + 1) + '/' + currDate.getDate());
     setNextDate(currDate);
+  }
+
+  const buildDateString = () => {
+    if (currentDate === 'No Schedule Set') {
+      return "No Schedule Set";
+    } else {
+      return 'by ' + (currentDate.getMonth() + 1) + '/' + currentDate.getDate();
+    }
   }
 
   return (
@@ -131,7 +173,7 @@ export const PartyHeader = () => {
         <div className='party-header__grow' />
         <Button onClick={() => handleShow('up next')} className='party-header__details'>
           <p className='party-header__regular'> Up Next:</p>
-          <p className='party-header__bold'>{nextEpisode} by {'' + (currentDate.getMonth() + 1) + '/' + currentDate.getDate()}</p>
+          <p className='party-header__bold'>{nextEpisode} {buildDateString()}</p>
         </Button>
         <Button onClick={() => handleShow('currently watching')} className='party-header__details'>
           <p className='party-header__regular'>Currently Watching:</p>
@@ -142,7 +184,7 @@ export const PartyHeader = () => {
       </div>
 
       {/* All the popups for editing Watch Party details and Inviting friends */}
-      <Modal show={show === 'invite'} onHide={handleCancel}>
+      <Modal show={show === 'invite'} onHide={handleHide}>
         <Modal.Header closeButton>
           <Modal.Title>Invite Your Friends!</Modal.Title>
         </Modal.Header>
@@ -157,7 +199,7 @@ export const PartyHeader = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={show === 'title'} onHide={handleCancel}>
+      <Modal show={show === 'title'} onHide={handleHide}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Group Name</Modal.Title>
         </Modal.Header>
@@ -174,7 +216,7 @@ export const PartyHeader = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={show === 'up next'} onHide={handleCancel}>
+      <Modal show={show === 'up next'} onHide={handleHide}>
         <Modal.Header closeButton>
           <Modal.Title>Up Next</Modal.Title>
         </Modal.Header>
@@ -213,7 +255,7 @@ export const PartyHeader = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={show === 'currently watching'} onHide={handleCancel}>
+      <Modal show={show === 'currently watching'} onHide={handleHide}>
         <Modal.Header closeButton>
           <Modal.Title>Currently Watching</Modal.Title>
         </Modal.Header>
@@ -230,7 +272,7 @@ export const PartyHeader = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={show === 'settings'} onHide={handleCancel}>
+      <Modal show={show === 'settings'} onHide={handleHide}>
         <Modal.Header closeButton>
           <Modal.Title>Settings</Modal.Title>
         </Modal.Header>
@@ -238,7 +280,7 @@ export const PartyHeader = () => {
           <Button variant="danger" onClick={handleLeave}>Leave Group</Button>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={handleCancel}>
+          <Button variant="danger" onClick={handleHide}>
             Ok
           </Button>
         </Modal.Footer>
