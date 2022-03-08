@@ -63,7 +63,7 @@ export const PartyHeader = () => {
   const updateAllUsers = async (response) => {
     let userId = "";
     let channelId = "";
-    const date = dateString;
+    const date = nextDate.toISOString();
     response.members.forEach(async member => {
       userId = member.user_id;
       channelId = channel.id;
@@ -120,7 +120,7 @@ export const PartyHeader = () => {
     l.setDate(d.getDate() - 2);
 ;   d.setDate(d.getDate() + ((7 - d.getDay()) + day));
     d.setHours(0, 0, 0, 0);
-    return d;
+    return l;
   }
 
   /**
@@ -155,6 +155,12 @@ export const PartyHeader = () => {
     setNextDate(currDate);
   }
 
+  /**
+   * Builds the correct date string out of the currentDate, whether this is an actual date or
+   * a message letting the system know that there is no date upcoming.
+   * @returns {String} - Either 'No Schedule Set' or the upcoming deadline in the following
+   *   format: 'by MM/DD'
+   */
   const buildDateString = () => {
     if (currentDate === 'No Schedule Set') {
       return "No Schedule Set";

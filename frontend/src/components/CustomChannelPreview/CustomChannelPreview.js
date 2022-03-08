@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Avatar, ChatContext } from 'stream-chat-react';
+import { Avatar, ChatContext, useChatContext } from 'stream-chat-react';
 
 import './CustomChannelPreview.css';
 
@@ -16,12 +16,15 @@ export const CustomChannelPreview = (props) => {
   const { channel, setActiveChannel, setIsCreating } = props;
 
   const { channel: activeChannel } = useContext(ChatContext);
+  const { client } = useChatContext();
 
   const buildDateString = () => {
     if (channel.data.date === "No Schedule Set") {
       return "No Schedule Set";
     } else {
-      return "by " + channel.data.date;
+      const date = new Date(client.user[channel.id]);
+      const stringDate = '' + (date.getMonth() + 1) + '/' + date.getDate();
+      return "by " + stringDate;
     }
   }
 
