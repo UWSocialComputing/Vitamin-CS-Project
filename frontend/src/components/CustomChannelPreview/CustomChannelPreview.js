@@ -22,6 +22,7 @@ export const CustomChannelPreview = (props) => {
     if (channel.data.date === "No Schedule Set") {
       return "No Schedule Set";
     } else {
+      console.log(client.user[channel.id]);
       const date = new Date(client.user[channel.id]);
       const stringDate = '' + (date.getMonth() + 1) + '/' + date.getDate();
       return "by " + stringDate;

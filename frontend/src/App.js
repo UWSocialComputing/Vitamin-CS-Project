@@ -116,8 +116,31 @@ const App = () => {
       const addToGroup = async () => {
         await axios.post(`http://localhost:8000/joinGroup`,{ userId: cookies.get('userId'), channelId: id});
       }
+      const updateSpoilers = async (userId, channelId, date) => {
+        await axios.post('http://localhost:8000/spoilerUpdate',
+              { userId, channelId, date }
+            );
+      }
       if (authToken) {
         addToGroup();
+        const updateUser = () => {
+          const channels = client.activeChannels;
+          const userId = client.user.id;
+          const channelId = id;
+          let date = "";
+          let currentId = "";
+          let channel = {};
+          for (const property in channels) {
+            currentId = `${channels[property].id}`;
+            channel = channels[property];
+            if (currentId === id) {
+              date = channel.data.preciseDate;
+              updateSpoilers(userId, channelId, date);
+            }
+          }
+          window.location.reload();
+        }
+        setTimeout(updateUser, 1000);
       }
     }, [id])
 

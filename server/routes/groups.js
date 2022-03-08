@@ -26,7 +26,7 @@ exports.spoilerCheck = async (req, res) => {
     // update each channel
     channelIds.forEach(channelId => {
       if (users[0][channelId] === 'none') {
-        channelList.push(true);
+        channelList.push({[channelId]: true});
       } else {
         let update = new Date(users[0][channelId]) > new Date();
         channelList.push({ [channelId]: update });
