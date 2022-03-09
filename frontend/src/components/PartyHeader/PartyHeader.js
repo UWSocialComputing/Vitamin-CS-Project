@@ -120,7 +120,7 @@ export const PartyHeader = () => {
     l.setDate(d.getDate() - 2);
 ;   d.setDate(d.getDate() + ((7 - d.getDay()) + day));
     d.setHours(0, 0, 0, 0);
-    return l;
+    return d;
   }
 
   /**
